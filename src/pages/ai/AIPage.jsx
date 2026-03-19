@@ -21,14 +21,24 @@ import {
   ChevronUp,
   X,
   Check,
+  Calendar,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Card from "../../components/ui/Card";
 import StatCard from "../../components/ui/StatCard";
 import StatusBadge from "../../components/ui/StatusBadge";
 import PageHeader from "../../components/ui/PageHeader";
 import { aiAnalysis } from "../../data/dummy";
+import { AnimatePresence } from "framer-motion";
 
-const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, iconColor = "var(--primary)" }) => {
+const FilterDropdown = ({
+  label,
+  icon: Icon,
+  options,
+  selectedValue,
+  onChange,
+  iconColor = "var(--primary)",
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -54,7 +64,7 @@ const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, i
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-between gap-3 px-4 py-2.5 min-w-[200px] rounded-xl border transition-all duration-200 bg-white dark:bg-gray-800 shadow-sm
-          ${isOpen ? 'border-orange-500 ring-2 ring-orange-500/10' : 'border-gray-200 dark:border-gray-700 hover:border-orange-400'}`}
+          ${isOpen ? "border-orange-500 ring-2 ring-orange-500/10" : "border-gray-200 dark:border-gray-700 hover:border-orange-400"}`}
       >
         <div className="flex items-center gap-2.5 truncate">
           <Icon size={18} style={{ color: iconColor }} />
@@ -62,8 +72,8 @@ const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, i
             {!isAllSelected && (
               <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex items-center gap-1">
                 {selectedValue}
-                <X 
-                  size={10} 
+                <X
+                  size={10}
                   className="cursor-pointer hover:text-orange-800"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -72,12 +82,17 @@ const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, i
                 />
               </span>
             )}
-            <span className={`text-sm font-bold truncate ${isAllSelected ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400'}`}>
+            <span
+              className={`text-sm font-bold truncate ${isAllSelected ? "text-gray-700 dark:text-gray-200" : "text-gray-400"}`}
+            >
               {isAllSelected ? label : ""}
             </span>
           </div>
         </div>
-        <ChevronDown size={14} className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          size={14}
+          className={`text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {isOpen && (
@@ -86,21 +101,29 @@ const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, i
             {options.map((option) => {
               const isSelected = selectedValue === option;
               const isAll = option.startsWith("All");
-              const initials = option.split(' ').map(n => n[0]).join('').substring(0, 2);
+              const initials = option
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .substring(0, 2);
 
               return (
                 <div
                   key={option}
                   onClick={() => handleSelect(option)}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-150 mb-1 last:mb-0
-                    ${isSelected 
-                      ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 shadow-sm' 
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+                    ${
+                      isSelected
+                        ? "bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 shadow-sm"
+                        : "hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     {!isAll ? (
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-sm
-                        ${isSelected ? 'bg-orange-500 text-white' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'}`}>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-sm
+                        ${isSelected ? "bg-orange-500 text-white" : "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400"}`}
+                      >
                         {initials}
                       </div>
                     ) : (
@@ -108,7 +131,11 @@ const FilterDropdown = ({ label, icon: Icon, options, selectedValue, onChange, i
                         <Icon size={14} className="text-gray-400" />
                       </div>
                     )}
-                    <span className={`text-sm ${isSelected ? 'font-bold' : 'font-semibold'}`}>{option}</span>
+                    <span
+                      className={`text-sm ${isSelected ? "font-bold" : "font-semibold"}`}
+                    >
+                      {option}
+                    </span>
                   </div>
                   {isSelected && <Check size={16} />}
                 </div>
@@ -128,15 +155,23 @@ export default function AIPage() {
   const role = localStorage.getItem("ck_role");
 
   // Get unique chefs and reviewers
-  const chefs = ["All Chefs", ...new Set(aiAnalysis.map(a => a.submittedBy).filter(Boolean))];
-  const reviewers = ["All Reviewers", ...new Set(aiAnalysis.map(a => a.reviewedBy).filter(Boolean))];
+  const chefs = [
+    "All Chefs",
+    ...new Set(aiAnalysis.map((a) => a.submittedBy).filter(Boolean)),
+  ];
+  const reviewers = [
+    "All Reviewers",
+    ...new Set(aiAnalysis.map((a) => a.reviewedBy).filter(Boolean)),
+  ];
 
   const filtered = aiAnalysis.filter((a) => {
     const matchesSearch =
       a.recipe.toLowerCase().includes(search.toLowerCase()) ||
       a.id.toLowerCase().includes(search.toLowerCase());
-    const matchesChef = chefFilter === "All Chefs" || a.submittedBy === chefFilter;
-    const matchesReviewer = reviewerFilter === "All Reviewers" || a.reviewedBy === reviewerFilter;
+    const matchesChef =
+      chefFilter === "All Chefs" || a.submittedBy === chefFilter;
+    const matchesReviewer =
+      reviewerFilter === "All Reviewers" || a.reviewedBy === reviewerFilter;
     return matchesSearch && matchesChef && matchesReviewer;
   });
 
@@ -150,473 +185,493 @@ export default function AIPage() {
           : "var(--danger)";
 
     return (
-      <Card style={{ marginBottom: 20, padding: 24 }}>
-        {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 20,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition-all"></div>
-              <img 
-                src={data.image || "https://images.unsplash.com/photo-1604908176997-43149b0a7c0c"} 
-                alt={data.recipe}
-                className="relative w-16 h-16 rounded-xl object-cover border border-white/10 shadow-sm"
-              />
-            </div>
-            <div>
-              <div
-                style={{ fontSize: 18, fontWeight: 800, color: "var(--text)" }}
-              >
-                {data.recipe}
-              </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "var(--muted)",
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <span className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-[11px] font-bold">{data.id}</span>
-                <span>•</span>
-                <span>Batch: {data.batchNo}</span>
-                <span>•</span>
-                <span>{data.date}</span>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "4px 10px",
-                background: "var(--bg)",
-                borderRadius: 20,
-                border: "1px solid var(--border)",
-                fontSize: 11,
-                fontWeight: 700,
-                color: "var(--muted)",
-              }}
-            >
-              <div
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background:
-                    data.risk === "Low" ? "var(--success)" : "var(--warning)",
-                }}
-              />
-              Risk: {data.risk}
-            </div>
-            <StatusBadge status={data.status} />
-            <button
-              onClick={() => setExpanded(!expanded)}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                border: "none",
-                background: "var(--primary-glow)",
-                color: "var(--primary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                marginLeft: 4,
-                transform: expanded ? "rotate(180deg)" : "none",
-              }}
-            >
-              <ChevronDown size={14} />
-            </button>
-          </div>
-        </div>
-
-        {/* Metric Grid 1 */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
-            gap: 12,
-            marginBottom: 24,
-          }}
-        >
-          <MetricBox label="Temp" value={data.temp} icon={Thermometer} />
-          <MetricBox label="Timing" value={data.timing} icon={Clock} />
-          <MetricBox
-            label="Exp. Texture"
-            value={data.expTexture}
-            icon={FlaskConical}
-          />
-          <MetricBox
-            label="Act. Texture"
-            value={data.actTexture}
-            icon={Layers}
-            color={
-              data.expTexture !== data.actTexture
-                ? "var(--warning)"
-                : "var(--success)"
-            }
-          />
-          <MetricBox label="Exp. Yield" value={data.expYield} icon={Zap} />
-          <MetricBox label="Act. Yield" value={data.actYield} icon={Activity} />
-        </div>
-
-        {/* AI Variance Analysis Section */}
-        <div style={{ marginBottom: expanded ? 24 : 0 }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: "var(--muted)",
-              textTransform: "uppercase",
-              letterSpacing: 0.5,
-              marginBottom: 12,
-            }}
-          >
-            AI Variance Analysis
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            <div style={{ fontSize: 32, fontWeight: 900, color: barColor }}>
-              {data.variance}%
-            </div>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: 8,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--text)",
-                }}
-              >
-                {data.variance < 5 ? (
-                  <CheckCircle2 size={14} color="var(--success)" />
-                ) : (
-                  <AlertCircle size={14} color="var(--warning)" />
-                )}
-                {data.varianceStatus}
-              </div>
-              <div
-                style={{
-                  height: 8,
-                  background: "var(--border)",
-                  borderRadius: 4,
-                  width: "100%",
-                  position: "relative",
-                }}
-              >
-                <div
-                  style={{
-                    height: "100%",
-                    background: barColor,
-                    borderRadius: 4,
-                    width: `${Math.min(100, data.variance * 2)}%`,
-                    transition: "width 0.5s ease",
-                  }}
+      <Card
+        noPad
+        className="mb-8 overflow-hidden border-[var(--border)] shadow-xl shadow-black/5 dark:shadow-none hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 bg-gradient-to-b from-[var(--surface)] to-[var(--bg)] rounded-[32px] group"
+      >
+        <div className="p-6 lg:p-10">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-8 mb-10">
+            <div className="flex items-center gap-6 w-full">
+              <div className="relative shrink-0">
+                <div className="absolute -inset-2 bg-gradient-to-br from-[var(--primary)] to-amber-500 rounded-[24px] blur-xl opacity-20 group-hover:opacity-40 transition-all duration-700"></div>
+                <img
+                  src={
+                    data.image ||
+                    "https://images.unsplash.com/photo-1604908176997-43149b0a7c0c"
+                  }
+                  alt={data.recipe}
+                  className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-[22px] object-cover border-2 border-[var(--surface)] shadow-2xl z-10"
                 />
               </div>
-            </div>
-          </div>
-        </div>
-
-        {expanded && (
-          <div style={{ animation: "fadeIn 0.3s ease-out" }}>
-            {/* Metric Grid 2 */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 12,
-                marginBottom: 24,
-              }}
-            >
-              <MetricBox
-                label="Exp. Taste"
-                value={`★ ${data.expTaste}`}
-                icon={Star}
-              />
-              <MetricBox
-                label="Act. Taste"
-                value={`★ ${data.actTaste}`}
-                icon={Star}
-                color="var(--primary)"
-              />
-              <MetricBox
-                label="Submitted by"
-                value={data.submittedBy}
-                icon={User}
-              />
-              <MetricBox
-                label="Recipe Ver."
-                value={data.version}
-                icon={FileText}
-              />
-            </div>
-
-            {/* Attached Files & Remarks */}
-            <div
-              style={{
-                borderTop: "1px solid var(--border)",
-                paddingTop: 20,
-                display: "flex",
-                flexDirection: "column",
-                gap: 16,
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: "var(--muted)",
-                    textTransform: "uppercase",
-                    letterSpacing: 0.5,
-                    marginBottom: 8,
-                  }}
-                >
-                  Attached Files
+              <div className="min-w-0 space-y-1.5">
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-black px-3 py-1 bg-[var(--primary-glow)] text-[var(--primary)] border border-[var(--primary)]/20 rounded-full uppercase tracking-widest shadow-sm">
+                    {data.id}
+                  </span>
+                  <span className="text-[10px] font-black px-3 py-1 bg-[var(--bg)] text-[var(--muted)] border border-[var(--border)] rounded-full uppercase tracking-widest opacity-60">
+                    Batch {data.batchNo}
+                  </span>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {data.files.map((f) => (
-                    <div
-                      key={f}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        padding: "6px 12px",
-                        background: "var(--bg)",
-                        border: "1px solid var(--border)",
-                        borderRadius: 8,
-                        fontSize: 12,
-                        color: "var(--text)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      <FileText size={14} color="var(--primary)" />
-                      {f}
+                <h3 className="text-xl lg:text-2xl font-black text-[var(--text)] tracking-tight group-hover:text-[var(--primary)] transition-colors duration-500">
+                  {data.recipe}
+                </h3>
+                <div className="flex items-center gap-4 text-[12px] font-bold text-[var(--muted)]">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={14} className="opacity-40" />
+                    {data.date}
+                  </div>
+                  {data.time && (
+                    <div className="flex items-center gap-1.5">
+                      <Clock size={14} className="opacity-40" />
+                      {data.time}
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: "var(--muted)",
-                    textTransform: "uppercase",
-                    letterSpacing: 0.5,
-                    marginBottom: 8,
-                  }}
-                >
-                  Reviewer Remarks
-                </div>
-                <div
-                  style={{
-                    padding: "12px 16px",
-                    background: "var(--bg)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 10,
-                    fontSize: 13,
-                    color: "var(--muted)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {data.remarks}
+                  )}
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--border)]" />
+                  <div className="flex items-center gap-1.5 text-rose-500/80">
+                    <AlertCircle size={14} />
+                    Risk Level: {data.risk}
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div className="flex items-center gap-3 self-end lg:self-start">
+              <StatusBadge status={data.status} size="lg" />
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className={`w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-700 shadow-lg ${
+                  expanded
+                    ? "bg-[var(--primary)] text-white border-[var(--primary)] rotate-180 scale-90"
+                    : "bg-[var(--surface)] text-[var(--muted)] border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                }`}
+              >
+                <ChevronDown size={20} strokeWidth={3} />
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* Primary Metrics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+            {[
+              {
+                label: "Precision",
+                val: data.temp,
+                icon: Thermometer,
+                color: "rose",
+              },
+              {
+                label: "Cycle",
+                val: data.timing,
+                icon: Clock,
+                color: "indigo",
+              },
+              {
+                label: "Target Texture",
+                val: data.expTexture,
+                icon: FlaskConical,
+                color: "blue",
+              },
+              {
+                label: "Actual Texture",
+                val: data.actTexture,
+                icon: Layers,
+                color:
+                  data.expTexture !== data.actTexture ? "amber" : "emerald",
+              },
+              {
+                label: "Predicted Yield",
+                val: data.expYield,
+                icon: Zap,
+                color: "orange",
+              },
+              {
+                label: "Actual Yield",
+                val: data.actYield,
+                icon: Activity,
+                color: "emerald",
+              },
+            ].map((metric) => (
+              <div
+                key={metric.label}
+                className="p-5 bg-[var(--bg)] border border-[var(--border)]/50 rounded-[24px] shadow-sm hover:shadow-md transition-all duration-500 group/metric relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br from-[var(--primary)]/5 to-transparent rounded-full -mr-6 -mt-6 group-hover/metric:scale-150 transition-transform duration-700" />
+                <div className="text-[9px] font-black text-[var(--muted)] uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                  <metric.icon
+                    size={12}
+                    className="text-[var(--primary)] opacity-60"
+                  />
+                  {metric.label}
+                </div>
+                <div className="text-sm font-black text-[var(--text)] tracking-tight">
+                  {metric.val}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* AI Convergence Analysis */}
+          <div className="relative p-8 lg:p-10 bg-[var(--bg)] rounded-[40px] border border-[var(--border)] overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--primary)]/5 blur-[100px] rounded-full -mr-48 -mt-48" />
+
+            <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10">
+              <div className="flex flex-col items-center gap-2">
+                <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest opacity-60 mb-2">
+                  Convergence Variance
+                </div>
+                <div className="relative w-32 h-32 flex items-center justify-center">
+                  <svg className="w-full h-full -rotate-90">
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="58"
+                      className="stroke-[var(--border)] fill-none stroke-[8px]"
+                    />
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="58"
+                      className="fill-none stroke-[8px] transition-all duration-1000 ease-out"
+                      strokeDasharray="364.4"
+                      strokeDashoffset={364.4 - (364.4 * data.variance) / 100}
+                      stroke={barColor}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center flex-col">
+                    <span className="text-3xl font-black text-[var(--text)]">
+                      {data.variance}%
+                    </span>
+                    <span className="text-[9px] font-black text-[var(--muted)] uppercase tracking-tighter opacity-60">
+                      Delta
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 w-full space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center bg-white border border-[var(--border)] shadow-sm ${data.variance < 10 ? "text-emerald-500" : "text-amber-500"}`}
+                    >
+                      {data.variance < 10 ? (
+                        <ShieldCheck size={20} />
+                      ) : (
+                        <AlertCircle size={20} />
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-sm font-black text-[var(--text)] uppercase tracking-wider">
+                        {data.varianceStatus}
+                      </div>
+                      <div className="text-[10px] font-extrabold text-[var(--muted)] uppercase tracking-widest opacity-60">
+                        AI Semantic Validation Engine
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hidden sm:block text-[10px] font-black text-[var(--muted)] uppercase tracking-widest">
+                    Confidence Score: 98.4%
+                  </div>
+                </div>
+
+                <div className="h-4 bg-[var(--bg-subtle)] rounded-full w-full p-1 border border-[var(--border)]/50">
+                  <div
+                    className="h-full rounded-full transition-all duration-1000 ease-out shadow-lg"
+                    style={{
+                      backgroundColor: barColor,
+                      width: `${data.variance}%`,
+                    }}
+                  />
+                </div>
+                <p className="text-[13px] font-bold text-[var(--text-subtle)] leading-relaxed italic opacity-80">
+                  "The anomaly detection algorithm identified a {data.variance}%
+                  deviation in production parameters compared to the baseline
+                  recipe {data.version}."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="pt-10 mt-10 border-t border-[var(--border)]/50 space-y-10">
+                  {/* Secondary Details Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="p-6 bg-[var(--bg)] border border-[var(--border)] rounded-[24px]">
+                      <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest mb-4">
+                        Sensory Calibration
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="flex-1 space-y-1">
+                          <div className="text-[9px] font-black text-[var(--muted)] uppercase">
+                            Expected
+                          </div>
+                          <div className="text-sm font-black text-[var(--text)]">
+                            ★ {data.expTaste}
+                          </div>
+                        </div>
+                        <div className="w-[1px] h-8 bg-[var(--border)]" />
+                        <div className="flex-1 space-y-1">
+                          <div className="text-[9px] font-black text-[var(--muted)] uppercase">
+                            Actual
+                          </div>
+                          <div className="text-sm font-black text-[var(--primary)]">
+                            ★ {data.actTaste}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-[var(--bg)] border border-[var(--border)] rounded-[24px]">
+                      <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest mb-4">
+                        Identity Verification
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[var(--primary-glow)] flex items-center justify-center text-[11px] font-black text-[var(--primary)]">
+                          {data.submittedBy
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </div>
+                        <div>
+                          <div className="text-xs font-black text-[var(--text)]">
+                            {data.submittedBy}
+                          </div>
+                          <div className="text-[9px] font-black text-[var(--muted)] uppercase tracking-widest">
+                            Protocol Submitter
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-[var(--bg)] border border-[var(--border)] rounded-[24px]">
+                      <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest mb-4">
+                        Schema Version
+                      </div>
+                      <div className="flex items-center gap-3 text-[var(--text)]">
+                        <FileText size={18} className="text-[var(--primary)]" />
+                        <span className="text-sm font-bold">
+                          {data.version} - Stable Release
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-[var(--bg)] border border-[var(--border)] rounded-[24px]">
+                      <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest mb-4">
+                        Peer Audit
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[var(--bg-subtle)] border border-[var(--border)] flex items-center justify-center text-[11px] font-black text-[var(--muted)]">
+                          {data.reviewedBy
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .join("") || "??"}
+                        </div>
+                        <div>
+                          <div className="text-xs font-black text-[var(--text)]">
+                            {data.reviewedBy || "Pending"}
+                          </div>
+                          <div className="text-[9px] font-black text-[var(--muted)] uppercase tracking-widest">
+                            Senior Reviewer
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Remarks & Assets */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-6 bg-[var(--primary)] rounded-full" />
+                        <h4 className="text-sm font-black text-[var(--text)] uppercase tracking-widest">
+                          AI Synthesis Remarks
+                        </h4>
+                      </div>
+                      <div className="p-8 bg-[var(--surface)] rounded-[32px] border border-[var(--border)] shadow-inner leading-relaxed text-sm font-medium text-[var(--text-subtle)]">
+                        {data.remarks}
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-6 bg-blue-500 rounded-full" />
+                        <h4 className="text-sm font-black text-[var(--text)] uppercase tracking-widest">
+                          Protocol Artifacts
+                        </h4>
+                      </div>
+                      <div className="flex flex-wrap gap-4">
+                        {data.files.map((f) => (
+                          <button
+                            key={f}
+                            className="group/file flex items-center gap-3 px-6 py-4 bg-[var(--bg)] border border-[var(--border)] rounded-[24px] text-xs font-black text-[var(--text)] hover:border-[var(--primary)]/30 hover:bg-[var(--primary-glow)] transition-all duration-300 shadow-sm"
+                          >
+                            <div className="w-8 h-8 rounded-xl bg-[var(--surface)] flex items-center justify-center group-hover/file:bg-[var(--primary)] group-hover/file:text-white transition-colors">
+                              <FileText size={16} />
+                            </div>
+                            {f}
+                            <Download
+                              size={14}
+                              className="text-[var(--muted)] group-hover/file:text-[var(--primary)] ml-2"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </Card>
     );
   };
 
   const MetricBox = ({ label, value, icon: Icon, color = "var(--text)" }) => (
-    <div
-      style={{
-        background: "var(--bg)",
-        border: "1px solid var(--border)",
-        borderRadius: 12,
-        padding: "12px 14px",
-      }}
-    >
-      <div
-        style={{
-          fontSize: 11,
-          color: "var(--muted)",
-          fontWeight: 600,
-          textTransform: "uppercase",
-          marginBottom: 6,
-          display: "flex",
-          alignItems: "center",
-          gap: 4,
-        }}
-      >
-        <Icon size={12} color="var(--muted)" />
-        {label}
+    <div className="bg-[var(--bg)] border border-[var(--border)] rounded-2xl p-3.5 sm:p-4 shadow-sm group hover:shadow-md transition-all hover:bg-[var(--surface-hover)]">
+      <div className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+        <Icon
+          size={12}
+          className="text-[var(--primary)] opacity-70 group-hover:opacity-100"
+        />
+        <span className="truncate">{label}</span>
       </div>
-      <div style={{ fontSize: 14, fontWeight: 700, color }}>{value}</div>
+      <div className="text-sm font-black truncate" style={{ color }}>
+        {value}
+      </div>
     </div>
   );
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease-out" }}>
+    <div className="animate-in fade-in duration-700 space-y-8">
       <PageHeader
-        title="AI Analysis"
-        subtitle="Approve or reject experiments based on granular AI variance data."
+        title="AI Analytics"
+        subtitle="Approve or reject production batches based on deep neural analysis of variance data."
+        actions={[
+          <div
+            key="monitor"
+            className="flex items-center gap-2.5 px-5 py-2.5 bg-[var(--primary-glow)] rounded-2xl border border-[var(--primary)]/20 text-[11px] font-black text-[var(--primary)] uppercase tracking-widest shadow-sm"
+          >
+            <Activity size={14} strokeWidth={3} className="animate-pulse" />
+            AI Training Online
+          </div>,
+        ]}
       />
 
       {/* Top Stat Row */}
       {role === "Manager" && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4,1fr)",
-            gap: 16,
-            marginBottom: 24,
-          }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             icon={<Zap size={20} />}
-            label="Yield Pred."
+            label="Yield Reliability"
             value="94.8%"
-            trend="1.2%"
+            trend="+1.2%"
             trendUp
-            sub="Avg. Performance"
+            sub="Predicted vs Actual"
           />
           <StatCard
             icon={<Star size={20} />}
-            label="Texture Match Rate"
-            value="91%"
-            trend="3.8%"
+            label="Texture Precision"
+            value="91.2%"
+            trend="+3.8%"
             trendUp
-            sub="AI accuracy"
+            sub="Neural Match Confidence"
           />
           <StatCard
             icon={<Shield size={20} />}
-            label="Total Predictions"
+            label="Security Signatures"
             value="156"
-            sub="All time"
+            sub="Verified Protocols"
           />
           <StatCard
             icon={<Activity size={20} />}
-            label="Total Experiments"
+            label="Analytic Throughput"
             value={aiAnalysis.length}
-            sub="Analyzed items"
+            sub="Experiments Processed"
           />
         </div>
       )}
 
       {/* Toolbar & Filters */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 20,
-        }}
-      >
-        <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>
-          {filtered.length} experiments results
+      <Card className="p-2 lg:p-3 overflow-visible">
+        <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
+          <div className="flex-1 relative group">
+            <Search
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted)] group-focus-within:text-[var(--primary)] transition-colors"
+            />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Query experiments by name, identity, or batch hash..."
+              className="w-full pl-12 pr-4 py-4 rounded-[20px] bg-[var(--bg)] border border-[var(--border)] text-sm font-bold text-[var(--text)] focus:ring-4 focus:ring-[var(--primary)]/10 focus:border-[var(--primary)] outline-none transition-all placeholder:opacity-50"
+            />
+          </div>
+
+          <div className="flex flex-wrap lg:flex-nowrap gap-4">
+            <FilterDropdown
+              label="Submitter"
+              icon={ChefHat}
+              options={chefs}
+              selectedValue={chefFilter}
+              onChange={setChefFilter}
+              iconColor="var(--primary)"
+            />
+
+            <FilterDropdown
+              label="Reviewer"
+              icon={ShieldCheck}
+              options={reviewers}
+              selectedValue={reviewerFilter}
+              onChange={setReviewerFilter}
+              iconColor="var(--primary)"
+            />
+
+            <button className="flex items-center justify-center gap-3 px-8 py-4 bg-[var(--primary)] text-white rounded-[20px] text-[11px] font-black uppercase tracking-widest shadow-xl shadow-[var(--primary)]/20 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--primary)]/30 transition-all duration-300 min-w-[160px]">
+              <Download size={18} strokeWidth={3} />
+              Export
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div style={{ marginBottom: 24, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-        {/* Search Input */}
-        <div style={{ position: "relative", flex: 2, minWidth: 300 }}>
-          <Search
-            size={16}
-            style={{
-              position: "absolute",
-              left: 14,
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--muted)",
-            }}
-          />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search experiments by name or ID..."
-            className="input-field"
-            style={{ 
-              paddingLeft: 42, 
-              height: 44,
-              fontSize: 14,
-              borderRadius: 12,
-              background: "var(--surface)",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.02)"
-            }}
-          />
-        </div>
-
-        {/* Chef Filter */}
-        <FilterDropdown 
-          label="Chef"
-          icon={ChefHat}
-          options={chefs}
-          selectedValue={chefFilter}
-          onChange={setChefFilter}
-          iconColor="var(--primary)"
-        />
-
-        {/* Reviewer Filter */}
-        <FilterDropdown 
-          label="Reviewer"
-          icon={ShieldCheck}
-          options={reviewers}
-          selectedValue={reviewerFilter}
-          onChange={setReviewerFilter}
-          iconColor="var(--indigo-500)"
-        />
-
-        <button
-          className="btn-primary"
-          style={{ 
-            display: "flex", 
-            alignItems: "center", 
-            gap: 8,
-            height: 44,
-            padding: "0 20px",
-            borderRadius: 12,
-            boxShadow: "0 4px 12px var(--primary-glow)"
-          }}
-        >
-          <Download size={16} /> Export Report
-        </button>
-      </div>
+      </Card>
 
       {/* Experiment List */}
-      <div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-4 mb-4">
+          <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] opacity-60">
+            Result Set: {filtered.length} Entities Found
+          </div>
+          <div className="flex items-center gap-2 text-[10px] font-black text-[var(--primary)] uppercase tracking-widest">
+            <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
+            Real-time Sync Active
+          </div>
+        </div>
+
         {filtered.map((e) => (
           <ExperimentCard key={e.id} data={e} />
         ))}
         {filtered.length === 0 && (
-          <div
-            style={{
-              padding: 60,
-              textAlign: "center",
-              color: "var(--muted)",
-              background: "var(--surface)",
-              borderRadius: 16,
-              border: "1px dashed var(--border)",
-            }}
-          >
-            No experiments found matching your criteria.
+          <div className="p-32 text-center bg-[var(--surface)] rounded-[48px] border-2 border-dashed border-[var(--border)]">
+            <div className="w-20 h-20 bg-[var(--bg)] rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Search size={32} className="text-[var(--muted)] opacity-30" />
+            </div>
+            <div className="text-xl font-black text-[var(--text)] uppercase tracking-widest">
+              No Intelligence Data
+            </div>
+            <p className="text-sm font-bold text-[var(--muted)] mt-2 max-w-sm mx-auto leading-relaxed">
+              The current query parameters yielded zero matches in the neural
+              database.
+            </p>
           </div>
         )}
       </div>

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Bell, ChevronDown, RotateCcw, X, Lock, LogOut, Eye, EyeOff } from 'lucide-react'
+import { Search, Bell, ChevronDown, RotateCcw, X, Lock, LogOut, Eye, EyeOff, Menu } from 'lucide-react'
 import ThemeToggle from '../ui/ThemeToggle'
 
 const recentSearches = ['Butter Chicken v3.2', 'EXP-001 – Approved', 'Quality Review Queue', 'AI Variance Report']
 
-export default function Navbar({ sidebarWidth, onLogout }) {
+export default function Navbar({ collapsed, setIsMobileOpen, onLogout }) {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [focused, setFocused] = useState(false)
@@ -31,78 +31,56 @@ export default function Navbar({ sidebarWidth, onLogout }) {
 
   return (
     <>
-      <header style={{
-        position: 'fixed', top: 0,
-        left: sidebarWidth, right: 0, height: 64,
-        zIndex: 90,
-        background: 'var(--topbar-bg)',
-        borderBottom: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center',
-        padding: '0 24px', gap: 16,
-        transition: 'left 0.25s cubic-bezier(0.4,0,0.2,1)',
-      }}>
+      <header
+        className={`fixed top-0 right-0 h-16 z-[90] bg-[var(--topbar-bg)] border-b border-[var(--border)] flex items-center px-4 md:px-6 gap-3 md:gap-4 transition-[left] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] left-0 ${
+          collapsed ? "md:left-16" : "md:left-[220px]"
+        }`}
+      >
+        {/* Mobile Toggle */}
+        <button
+          onClick={() => setIsMobileOpen(true)}
+          className="p-2 -ml-2 rounded-lg text-[var(--muted)] md:hidden hover:bg-[var(--surface-hover)] transition-colors"
+        >
+          <Menu size={20} />
+        </button>
         {/* Search bar */}
-        <div style={{ flex: 1, maxWidth: 400, position: 'relative' }}>
-          <Search size={14} style={{
-            position: 'absolute', left: 12, top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'var(--muted)', pointerEvents: 'none',
-          }} />
+        <div className="flex-1 max-w-[400px] relative">
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none"
+          />
           <input
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 200)}
-            placeholder="Search experiments, recipes, logs..."
-            style={{
-              width: '100%',
-              background: 'var(--bg)',
-              border: `1px solid ${focused ? 'var(--primary)' : 'var(--border)'}`,
-              borderRadius: 10, padding: '8px 12px 8px 34px',
-              color: 'var(--text)', fontSize: 13,
-              outline: 'none', fontFamily: 'inherit',
-              boxShadow: focused ? '0 0 0 3px var(--primary-glow)' : 'none',
-              transition: 'all 0.2s',
-            }}
+            placeholder="Search experiments..."
+            className={`w-full bg-[var(--bg)] border rounded-[10px] py-2 pl-[34px] pr-3 text-[13px] text-[var(--text)] outline-none transition-all duration-200 ${
+              focused ? "border-[var(--primary)] ring-2 ring-[var(--primary-glow)]" : "border-[var(--border)]"
+            }`}
           />
           {search && (
-            <button onClick={() => setSearch('')} style={{
-              position: 'absolute', right: 10, top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none', border: 'none',
-              cursor: 'pointer', color: 'var(--muted)',
-              display: 'flex', alignItems: 'center',
-            }}>
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-[10px] top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[var(--muted)] flex items-center"
+            >
               <X size={13} />
             </button>
           )}
 
           {/* Search Dropdown */}
           {focused && (
-            <div style={{
-              position: 'absolute', top: 'calc(100% + 8px)',
-              left: 0, right: 0,
-              background: '#fff', borderRadius: 12,
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              padding: 8, zIndex: 200,
-            }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 1, padding: '6px 10px 4px' }}>
+            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] p-2 z-[200]">
+              <div className="text-[10px] font-bold text-[#999] uppercase tracking-wider p-[6px_10px_4px]">
                 Recent Searches
               </div>
-              {recentSearches.map(s => (
+              {recentSearches.map((s) => (
                 <div
                   key={s}
                   onClick={() => setSearch(s)}
-                  style={{
-                    padding: '9px 12px', borderRadius: 8,
-                    color: '#333', fontSize: 13, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    transition: 'background 0.1s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  className="p-[9px_12px] rounded-lg text-gray-800 dark:text-gray-200 text-[13px] cursor-pointer flex items-center gap-[10px] transition-colors hover:bg-gray-100 dark:hover:bg-gray-700/50"
                 >
-                  <RotateCcw size={13} color="#999" />
+                  <RotateCcw size={13} className="text-[#999]" />
                   {s}
                 </div>
               ))}
@@ -110,61 +88,65 @@ export default function Navbar({ sidebarWidth, onLogout }) {
           )}
         </div>
 
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="ml-auto flex items-center gap-2 md:gap-[10px]">
           {/* Theme toggle */}
-          <ThemeToggle />
-
-
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
 
           {/* User badge with dropdown */}
-          <div ref={dropdownRef} style={{ position: 'relative' }}>
+          <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '6px 12px 6px 8px',
-                background: 'var(--bg)',
-                border: '1px solid var(--border)',
-                borderRadius: 10, cursor: 'pointer',
-                fontFamily: 'inherit',
-                transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.background = 'var(--primary-glow)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg)' }}
+              className="flex items-center gap-2 md:gap-[10px] p-[6px_12px_6px_8px] bg-[var(--bg)] border border-[var(--border)] rounded-[10px] cursor-pointer transition-all duration-150 hover:border-[var(--primary)] hover:bg-[var(--primary-glow)]"
             >
-              <div style={{
-                width: 30, height: 30, borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 11, fontWeight: 800, color: '#fff',
-              }}>
+              <div className="w-[30px] h-[30px] rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-[11px] font-extrabold text-white">
                 {initials}
               </div>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)' }}>{username}</div>
-                <div style={{ fontSize: 10, color: 'var(--muted)' }}>{role}</div>
+              <div className="text-left hidden xs:block">
+                <div className="text-xs font-bold text-[var(--text)]">
+                  {username}
+                </div>
+                <div className="text-[10px] text-[var(--muted)]">{role}</div>
               </div>
-              <ChevronDown size={13} color="var(--muted)" style={{ transition: 'transform 0.2s', transform: showDropdown ? 'rotate(180deg)' : 'rotate(0)' }} />
+              <ChevronDown
+                size={13}
+                className={`text-[var(--muted)] transition-transform duration-200 ${
+                  showDropdown ? "rotate-180" : "rotate-0"
+                }`}
+              />
             </button>
 
             {/* Profile Dropdown */}
             {showDropdown && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50" style={{ animation: 'fadeIn 0.15s ease-out' }}>
+              <div
+                className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50 animate-fade-in"
+              >
                 <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-700">
-                  <div className="text-sm font-bold text-gray-900 dark:text-white">{username}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">{userEmail}</div>
+                  <div className="text-sm font-bold text-gray-900 dark:text-white">
+                    {username}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {userEmail}
+                  </div>
                 </div>
-                {role !== 'CRA' && (
-                <button
-                  onClick={() => { setShowDropdown(false); setShowChangePassword(true) }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-                >
-                  <Lock size={15} className="text-gray-400" />
-                  Change Password
-                </button>
+                {role !== "CRA" && (
+                  <button
+                    onClick={() => {
+                      setShowDropdown(false);
+                      setShowChangePassword(true);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  >
+                    <Lock size={15} className="text-gray-400" />
+                    Change Password
+                  </button>
                 )}
                 <button
-                  onClick={() => { setShowDropdown(false); setShowLogoutConfirm(true) }}
+                  onClick={() => {
+                    setShowDropdown(false);
+                    setShowLogoutConfirm(true);
+                  }}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                 >
                   <LogOut size={15} />

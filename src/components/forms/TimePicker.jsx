@@ -127,33 +127,15 @@ export default function TimePicker({
   };
 
   return (
-    <div ref={rootRef} style={{ position: "relative" }}>
+    <div ref={rootRef} className="relative">
       {label && (
-        <label
-          style={{
-            display: "block",
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--muted)",
-            marginBottom: 6,
-          }}
-        >
-          {label} {required && <span style={{ color: "var(--danger)" }}>*</span>}
+        <label className="block text-xs font-semibold text-[var(--muted)] mb-1.5">
+          {label}{" "}
+          {required && <span className="text-[var(--danger)]">*</span>}
         </label>
       )}
-      <div style={{ position: "relative" }}>
-        <span
-          style={{
-            position: "absolute",
-            left: 12,
-            top: "50%",
-            transform: "translateY(-50%)",
-            color: "var(--muted)",
-            pointerEvents: "none",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none flex items-center">
           <Clock size={16} />
         </span>
         <input
@@ -167,55 +149,27 @@ export default function TimePicker({
           aria-label={label || "Time picker"}
           aria-haspopup="dialog"
           aria-expanded={open}
-          className="input-field"
-          style={{ paddingLeft: 38, cursor: "pointer" }}
+          className="input-field pl-9 cursor-pointer"
         />
       </div>
 
       <div
         role="dialog"
         aria-hidden={!open}
-        style={{
-          position: "absolute",
-          top: "calc(100% + 8px)",
-          left: 0,
-          width: 260,
-          maxWidth: "100%",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 12,
-          // boxShadow: "0 12px 28px var(--primary-glow-strong)",
-          padding: 10,
-          opacity: open ? 1 : 0,
-          transform: open ? "translateY(0)" : "translateY(-6px)",
-          transition: "opacity 0.16s ease, transform 0.16s ease",
-          pointerEvents: open ? "auto" : "none",
-          zIndex: 50,
-        }}
+        className={`absolute top-[calc(100%+8px)] left-0 w-[260px] max-w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2.5 transition-all duration-150 z-50 ${
+          open
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-1.5 pointer-events-none"
+        }`}
         onKeyDown={handleKeyDown}
       >
-        <div style={{ display: "flex", gap: 10 }}>
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                color: "var(--muted)",
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-                marginBottom: 4,
-              }}
-            >
+        <div className="flex gap-2.5">
+          <div className="flex-1">
+            <div className="text-[9px] font-bold text-[var(--muted)] uppercase tracking-widest mb-1">
               Hour
             </div>
             <div
-              style={{
-                maxHeight: 120,
-                overflowY: "auto",
-                borderRadius: 8,
-                border: "1px solid var(--border)",
-                background: "var(--bg)",
-              }}
+              className="max-h-[120px] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] scrollbar-hide"
               onMouseEnter={() => setActiveSection("hour")}
             >
               {HOURS.map((h) => {
@@ -225,17 +179,9 @@ export default function TimePicker({
                     key={h}
                     type="button"
                     onClick={() => updateTime(h, minute, ampm)}
-                    style={{
-                      width: "100%",
-                      padding: "6px 8px",
-                      textAlign: "left",
-                      border: "none",
-                      background: selected ? "var(--primary-glow)" : "transparent",
-                      color: selected ? "var(--primary)" : "var(--text)",
-                      fontWeight: selected ? 700 : 600,
-                      fontSize: 12,
-                      cursor: "pointer",
-                    }}
+                    className={`w-full p-1.5 px-2 text-left border-none cursor-pointer text-xs transition-colors ${
+                      selected ? "bg-[var(--primary-glow)] text-[var(--primary)] font-bold" : "bg-transparent text-[var(--text)] font-semibold hover:bg-[var(--bg-hover)]"
+                    }`}
                   >
                     {String(h).padStart(2, "0")}
                   </button>
@@ -244,27 +190,12 @@ export default function TimePicker({
             </div>
           </div>
 
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                color: "var(--muted)",
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-                marginBottom: 4,
-              }}
-            >
+          <div className="flex-1">
+            <div className="text-[9px] font-bold text-[var(--muted)] uppercase tracking-widest mb-1">
               Minute
             </div>
             <div
-              style={{
-                maxHeight: 120,
-                overflowY: "auto",
-                borderRadius: 8,
-                border: "1px solid var(--border)",
-                background: "var(--bg)",
-              }}
+              className="max-h-[120px] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] scrollbar-hide"
               onMouseEnter={() => setActiveSection("minute")}
             >
               {MINUTES.map((m) => {
@@ -274,17 +205,9 @@ export default function TimePicker({
                     key={m}
                     type="button"
                     onClick={() => updateTime(hour, m, ampm)}
-                    style={{
-                      width: "100%",
-                      padding: "6px 8px",
-                      textAlign: "left",
-                      border: "none",
-                      background: selected ? "var(--primary-glow)" : "transparent",
-                      color: selected ? "var(--primary)" : "var(--text)",
-                      fontWeight: selected ? 700 : 600,
-                      fontSize: 12,
-                      cursor: "pointer",
-                    }}
+                    className={`w-full p-1.5 px-2 text-left border-none cursor-pointer text-xs transition-colors ${
+                      selected ? "bg-[var(--primary-glow)] text-[var(--primary)] font-bold" : "bg-transparent text-[var(--text)] font-semibold hover:bg-[var(--bg-hover)]"
+                    }`}
                   >
                     {String(m).padStart(2, "0")}
                   </button>
@@ -293,28 +216,12 @@ export default function TimePicker({
             </div>
           </div>
 
-          <div style={{ width: 70 }}>
-            <div
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                color: "var(--muted)",
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-                marginBottom: 4,
-              }}
-            >
+          <div className="w-[70px]">
+            <div className="text-[9px] font-bold text-[var(--muted)] uppercase tracking-widest mb-1">
               AM/PM
             </div>
             <div
-              style={{
-                display: "grid",
-                gap: 8,
-                borderRadius: 8,
-                border: "1px solid var(--border)",
-                background: "var(--bg)",
-                padding: 6,
-              }}
+              className="grid gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg)] p-1.5"
               onMouseEnter={() => setActiveSection("ampm")}
             >
               {["AM", "PM"].map((period) => {
@@ -324,17 +231,11 @@ export default function TimePicker({
                     key={period}
                     type="button"
                     onClick={() => updateTime(hour, minute, period)}
-                    style={{
-                      width: "100%",
-                      padding: "6px 4px",
-                      borderRadius: 6,
-                      border: "1px solid var(--border)",
-                      background: selected ? "var(--primary)" : "var(--bg)",
-                      color: selected ? "var(--surface)" : "var(--text)",
-                      fontWeight: 700,
-                      fontSize: 12,
-                      cursor: "pointer",
-                    }}
+                    className={`w-full p-1.5 px-1 rounded-md border transition-all duration-150 text-xs font-bold cursor-pointer ${
+                      selected
+                        ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                        : "bg-[var(--bg)] text-[var(--text)] border-[var(--border)] hover:bg-[var(--bg-hover)]"
+                    }`}
                   >
                     {period}
                   </button>

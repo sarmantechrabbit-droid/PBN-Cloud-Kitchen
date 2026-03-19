@@ -20,6 +20,7 @@ import Unauthorized from "./pages/Unauthorized";
 
 function AppShell({ onLogout }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const isAuthed = localStorage.getItem("ck_auth") === "1";
   const role = localStorage.getItem("ck_role");
@@ -37,22 +38,22 @@ function AppShell({ onLogout }) {
       <Sidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
-        onLogout={() => setShowLogout(true)}
+        isMobileOpen={isMobileOpen}
+        setIsMobileOpen={setIsMobileOpen}
+        onLogout={onLogout}
       />
 
       <Navbar
         sidebarWidth={sidebarWidth}
+        collapsed={collapsed}
+        setIsMobileOpen={setIsMobileOpen}
         onLogout={onLogout}
       />
 
       <main
-        style={{
-          marginLeft: sidebarWidth,
-          marginTop: 64,
-          padding: 28,
-          minHeight: "calc(100vh - 64px)",
-          transition: "margin-left 0.25s cubic-bezier(0.4,0,0.2,1)",
-        }}
+        className={`transition-[margin-left] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] min-h-[calc(100vh-64px)] p-4 md:p-7 mt-16 ${
+          collapsed ? "md:ml-16" : "md:ml-[220px]"
+        }`}
       >
         <Routes>
           <Route
@@ -152,13 +153,7 @@ export default function App() {
   };
 
   return (
-    <div
-      style={{
-        background: "var(--app-bg)",
-        minHeight: "100vh",
-        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-      }}
-    >
+    <div className="bg-[var(--app-bg)] min-h-screen font-sans">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorized />} />

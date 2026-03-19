@@ -40,21 +40,21 @@ import { experiments, monthlyData } from "../../data/dummy";
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div
-      style={{
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: 10,
-        padding: "10px 14px",
-        fontSize: 12,
-      }}
-    >
-      <div style={{ fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>
-        {label}
-      </div>
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2.5 text-xs shadow-xl backdrop-blur-md">
+      <div className="font-bold text-[var(--text)] mb-1.5">{label}</div>
       {payload.map((p) => (
-        <div key={p.dataKey} style={{ color: p.color, marginBottom: 2 }}>
-          {p.dataKey}: {p.value}
+        <div
+          key={p.dataKey}
+          className="flex items-center gap-2 mb-0.5"
+          style={{ color: p.color }}
+        >
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: p.color }}
+          />
+          <span>
+            {p.dataKey}: {p.value}
+          </span>
         </div>
       ))}
     </div>
@@ -66,7 +66,6 @@ export default function DashboardPage() {
   const role = localStorage.getItem("ck_role") || "Manager";
   const userEmail = localStorage.getItem("ck_auth_email") || "Admin";
   const username = userEmail.split("@")[0];
-
 
   // Get experiments (stored + dummy)
   const storedExperiments = useMemo(() => {
@@ -168,211 +167,268 @@ export default function DashboardPage() {
   const filteredData = stats.data;
 
   const renderChefDashboard = () => (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       {/* Top Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Hello, {username}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">
-            Hello Chef, create and manage your experiments.
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-8 bg-orange-500 rounded-full" />
+            <h1 className="text-3xl sm:text-4xl font-black text-[var(--text)] tracking-tight">
+              Hello, {username}
+            </h1>
+          </div>
+          <p className="text-sm font-bold text-[var(--muted)] uppercase tracking-[0.2em] opacity-80 pl-5">
+            Executive Chef • Kitchen Experiment Center
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={() => navigate("/recipes")}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5"
+            className="group flex items-center justify-center gap-2.5 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-[20px] font-black italic tracking-tight shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1 active:scale-95"
           >
-            <Plus size={20} />
-            Create Experiment
+            <Plus
+              size={20}
+              strokeWidth={3}
+              className="group-hover:rotate-90 transition-transform"
+            />
+            CREATE EXPERIMENT
           </button>
           <button
             onClick={() => navigate("/all-recipes")}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2.5 px-8 py-4 bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] rounded-[20px] font-black italic tracking-tight hover:bg-[var(--bg)] transition-all hover:-translate-y-1 shadow-sm active:scale-95"
           >
-            <Utensils size={20} />
-            All Recipes
+            <Utensils size={20} strokeWidth={2.5} />
+            ALL RECIPES
           </button>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <SummaryCard
-          icon={<Utensils className="text-blue-500" />}
+          icon={<Utensils className="text-orange-500" />}
           count={stats.all}
-          label="All Recipes"
-          bgColor="bg-blue-50 dark:bg-blue-900/20"
-        />
-        <SummaryCard
-          icon={<CheckCircle className="text-green-500" />}
-          count={stats.completed}
-          label="Completed Recipes"
-          bgColor="bg-green-50 dark:bg-green-900/20"
-        />
-        <SummaryCard
-          icon={<Clock className="text-amber-500" />}
-          count={stats.pending}
-          label="Pending Recipes"
-          bgColor="bg-amber-50 dark:bg-amber-900/20"
-        />
-      </div>
-
-      {/* Table Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Recipe Data Table
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-              <tr>
-                <th className="px-6 py-4 font-semibold">Recipe Name</th>
-                <th className="px-6 py-4 font-semibold">Created Date</th>
-                <th className="px-6 py-4 font-semibold text-center">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {filteredData.map((exp) => (
-                <tr
-                  key={exp.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors group"
-                >
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-gray-900 dark:text-white">
-                      {exp.recipe}
-                    </div>
-                    <div className="text-xs text-gray-500">{exp.id}</div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                    {exp.date}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex justify-center">
-                      <StatusPill status={exp.status} />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-gray-400 hover:text-orange-500 transition-colors">
-                      <ArrowRight size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderReviewerDashboard = () => (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Top Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Hello, {username}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">
-            Hello Reviewer, add and manage quality reviews.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={() => navigate("/quality")}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f97316] text-white rounded-xl font-semibold shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
-          >
-            <ShieldCheck size={20} />
-            Add Review
-          </button>
-          <button
-            onClick={() => navigate("/reviews")}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all hover:-translate-y-0.5"
-          >
-            <FileText size={20} />
-            Feedbacks
-          </button>
-        </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <SummaryCard
-          icon={<FileText className="text-indigo-500" />}
-          count={stats.all}
-          label="All Reviews"
-          bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+          label="Total Experiments"
+          bgColor="bg-orange-500/10"
+          accentColor="orange"
         />
         <SummaryCard
           icon={<CheckCircle className="text-emerald-500" />}
           count={stats.completed}
-          label="Completed Reviews"
-          bgColor="bg-emerald-50 dark:bg-emerald-900/20"
+          label="Quality Approved"
+          bgColor="bg-emerald-500/10"
+          accentColor="emerald"
         />
         <SummaryCard
-          icon={<Clock className="text-rose-500" />}
+          icon={<Clock className="text-amber-500" />}
           count={stats.pending}
-          label="Pending Reviews"
-          bgColor="bg-rose-50 dark:bg-rose-900/20"
+          label="Pending Review"
+          bgColor="bg-amber-500/10"
+          accentColor="amber"
         />
       </div>
 
       {/* Table Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Reviews Table
-          </h2>
+      <Card
+        noPad
+        className="overflow-hidden border-[var(--border)] shadow-2xl shadow-black/5 dark:shadow-none rounded-[32px]"
+      >
+        <div className="p-8 border-b border-[var(--border)] bg-gradient-to-r from-orange-500/5 to-transparent">
+          <div className="flex items-center gap-3">
+            <FlaskConical className="text-orange-500" size={20} />
+            <h2 className="text-lg font-black text-[var(--text)] uppercase tracking-widest">
+              My Experiment History
+            </h2>
+          </div>
+          <p className="text-xs font-bold text-[var(--muted)] mt-1 ml-8">
+            Track and monitor your recent kitchen submissions
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+            <thead className="bg-[var(--bg)] text-[var(--muted)] text-[10px] font-black uppercase tracking-[0.2em]">
               <tr>
-                <th className="px-6 py-4 font-semibold">Experiment Name</th>
-                <th className="px-6 py-4 font-semibold">Reviewer</th>
-                <th className="px-6 py-4 font-semibold">Review Date</th>
-                <th className="px-6 py-4 font-semibold text-center">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                <th className="px-8 py-5 border-b border-[var(--border)]">
+                  Recipe Name
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] hidden sm:table-cell">
+                  Created Date
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] text-center">
+                  Status
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] text-right">
+                  Created Time
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            <tbody className="divide-y divide-[var(--border)]/50">
               {filteredData.map((exp) => (
                 <tr
                   key={exp.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors group"
+                  className="hover:bg-orange-500/[0.02] transition-colors group cursor-pointer"
                 >
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-gray-900 dark:text-white">
+                  <td className="px-8 py-6">
+                    <div className="font-black text-[var(--text)] text-sm tracking-tight group-hover:text-orange-500 transition-colors">
                       {exp.recipe}
                     </div>
-                    <div className="text-xs text-gray-500">{exp.id}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-[10px] font-bold text-indigo-700 dark:text-indigo-300">
-                        {exp.chef?.charAt(0) || "U"}
-                      </div>
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {exp.chef}
-                      </span>
+                    <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest mt-1 opacity-60">
+                      ID: {exp.id}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                  <td className="px-8 py-6 text-xs font-bold text-[var(--muted)] hidden sm:table-cell">
                     {exp.date}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-8 py-6">
                     <div className="flex justify-center">
                       <StatusPill status={exp.status} />
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-gray-400 hover:text-indigo-600 transition-colors">
-                      <ArrowRight size={18} />
+                  <td className="px-8 py-6 text-right text-xs font-bold text-[var(--muted)]">
+                    <div className="flex items-center justify-end gap-2 px-1">
+                      <Clock size={12} className="text-orange-500" />
+                      {exp.time || "10:00 AM"}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderReviewerDashboard = () => (
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+      {/* Top Section */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-8 bg-orange-500 rounded-full" />
+            <h1 className="text-3xl sm:text-4xl font-bold text-[var(--text)] tracking-tight">
+              Quality Review Dashboard
+            </h1>
+          </div>
+          <p className="text-sm font-medium text-[var(--muted)] pl-5">
+            Monitor and audit experiment quality standards.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button
+            onClick={() => navigate("/quality")}
+            className="group flex items-center justify-center gap-2.5 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-[20px] font-bold tracking-tight shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1 active:scale-95"
+          >
+            <ShieldCheck size={20} strokeWidth={2.5} />
+            ADD NEW REVIEW
+          </button>
+          <button
+            onClick={() => navigate("/reviews")}
+            className="flex items-center justify-center gap-2.5 px-8 py-4 bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] rounded-[20px] font-black italic tracking-tight hover:bg-[var(--bg)] transition-all hover:-translate-y-1 shadow-sm active:scale-95"
+          >
+            <FileText size={20} strokeWidth={2.5} />
+            FEEDBACK LOGS
+          </button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <SummaryCard
+          icon={<FileText className="text-orange-500" />}
+          count={stats.all}
+          label="Total Reviews"
+          bgColor="bg-orange-500/10"
+          accentColor="orange"
+        />
+        <SummaryCard
+          icon={<CheckCircle className="text-emerald-500" />}
+          count={stats.completed}
+          label="Approved"
+          bgColor="bg-emerald-500/10"
+          accentColor="emerald"
+        />
+        <SummaryCard
+          icon={<Clock className="text-rose-500" />}
+          count={stats.pending}
+          label="Awaiting Audit"
+          bgColor="bg-rose-500/10"
+          accentColor="rose"
+        />
+      </div>
+
+      {/* Table Section */}
+      <Card
+        noPad
+        className="overflow-hidden border-[var(--border)] shadow-2xl shadow-black/5 dark:shadow-none rounded-[32px]"
+      >
+        <div className="p-8 border-b border-[var(--border)] bg-gradient-to-r from-orange-500/5 to-transparent">
+          <div className="flex items-center gap-3">
+            <ClipboardCheck className="text-orange-500" size={20} />
+            <h2 className="text-lg font-bold text-[var(--text)] uppercase tracking-widest">
+              Review Pipeline
+            </h2>
+          </div>
+          <p className="text-xs font-medium text-[var(--muted)] mt-1 ml-8">
+            Real-time status of all active quality inspections
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-[var(--bg)] text-[var(--muted)] text-[10px] font-black uppercase tracking-[0.2em]">
+              <tr>
+                <th className="px-8 py-5 border-b border-[var(--border)]">
+                  Experiment
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] hidden sm:table-cell">
+                  Assigned Chef
+                </th>
+                <th className="px-8 py-5 border-b border(--border) hidden lg:table-cell">
+                  Target Date
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] text-center">
+                  Audit Status
+                </th>
+                <th className="px-8 py-5 border-b border-[var(--border)] text-right">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--border)]/50">
+              {filteredData.map((exp) => (
+                <tr
+                  key={exp.id}
+                  className="hover:bg-orange-500/[0.02] transition-colors group cursor-pointer"
+                >
+                  <td className="px-8 py-6">
+                    <div className="font-bold text-[var(--text)] text-sm tracking-tight group-hover:text-orange-500 transition-colors">
+                      {exp.recipe}
+                    </div>
+                    <div className="text-[10px] font-medium text-[var(--muted)] uppercase tracking-widest mt-1 opacity-60">
+                      {exp.id}
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 hidden sm:table-cell">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-[10px] font-bold text-orange-600">
+                        {exp.chef?.charAt(0) || "U"}
+                      </div>
+                      <span className="text-xs font-medium text-[var(--text)] tracking-tight">
+                        {exp.chef}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-xs font-medium text-[var(--muted)] hidden lg:table-cell">
+                    {exp.date}
+                  </td>
+                  <td className="px-8 py-6">
+                    <div className="flex justify-center">
+                      <StatusPill status={exp.status} />
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <button className="w-10 h-10 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-[var(--muted)] flex items-center justify-center hover:bg-[#f06f0f] hover:text-white hover:border-orange-600 transition-all group-hover:scale-110 active:scale-95 shadow-sm">
+                      <ArrowRight size={18} strokeWidth={3} />
                     </button>
                   </td>
                 </tr>
@@ -380,311 +436,223 @@ export default function DashboardPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease-out" }}>
+    <div className="animate-fade-in">
       {role === "Chef" ? (
         renderChefDashboard()
       ) : role === "Reviewer" ? (
         renderReviewerDashboard()
       ) : (
         // Management dashboard fallback (Restored original UI)
-        <div className="max-w-8xl mx-auto">
+        <div className="max-w-8xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700">
           <PageHeader
             title="Dashboard"
-            subtitle="Monitor your cloud kitchen experiment analytics and performance."
+            subtitle="Centralized intelligence hub for cloud kitchen operations and performance metrics."
           />
 
           {/* Stat Cards */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 16,
-              marginBottom: 24,
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <StatCard
-              icon={<FlaskConical size={20} />}
+              icon={<FlaskConical size={20} strokeWidth={2.5} />}
               label="Total Experiments"
               value="86"
               trend="12.4%"
               trendUp
-              sub="This month"
+              sub="Vs previous month"
             />
             <StatCard
-              icon={<CheckCircle size={20} />}
+              icon={<CheckCircle size={20} strokeWidth={2.5} />}
               label="Completed"
               value={monthlyData[5].completed}
               trend="8.2%"
               trendUp
-              sub="Ready for production"
+              sub="Production ready"
             />
             <StatCard
-              icon={<Clock size={20} />}
+              icon={<Clock size={20} strokeWidth={2.5} />}
               label="Pending Review"
               value="16"
-              sub="Awaiting quality check"
+              sub="Pending QA review"
             />
-            {/* <StatCard
-              icon={<FlaskConical size={20} />}
-              label="Monthly Success Experiments"
-              value="82%"
-              trend="4.5%"
-              trendUp
-              sub="Current Month"
-            /> */}
           </div>
 
           {/* Staff Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <StaffCard
-              icon={<ChefHat size={22} className="text-orange-500" />}
+              icon={<ChefHat className="text-orange-500" />}
               label="Total Chefs"
               count={staffCounts.chefs}
-              bgColor="bg-orange-50 dark:bg-orange-900/20"
+              bgColor="bg-orange-500/10"
             />
             <StaffCard
-              icon={<ShieldCheck size={22} className="text-indigo-500" />}
+              icon={<ShieldCheck className="text-indigo-500" />}
               label="Total Reviewers"
               count={staffCounts.reviewers}
-              bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+              bgColor="bg-indigo-500/10"
             />
             <StaffCard
-              icon={<ClipboardCheck size={22} className="text-teal-500" />}
+              icon={<ClipboardCheck className="text-emerald-500" />}
               label="Total CRA"
               count={staffCounts.cra}
-              bgColor="bg-teal-50 dark:bg-teal-900/20"
+              bgColor="bg-emerald-500/10"
             />
           </div>
 
           {/* Monthly Total Experiments Chart */}
-          <div style={{ marginBottom: 24 }}>
-            <Card>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 700,
-                      color: "var(--text)",
-                    }}
-                  >
+          <Card className="rounded-[40px] p-8 border-[var(--border)] shadow-2xl shadow-black/5 dark:shadow-none overflow-hidden relative group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[var(--primary)]/5 to-transparent rounded-full -mr-32 -mt-32 blur-3xl transition-opacity opacity-0 group-hover:opacity-100 duration-1000" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 relative z-10">
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-6 bg-[var(--primary)] rounded-full" />
+                  <h2 className="text-lg font-black text-[var(--text)] uppercase tracking-widest">
                     Monthly Total Experiments
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "var(--muted)",
-                      marginTop: 2,
-                    }}
-                  >
-                    Total experiments per month — last 6 months
-                  </div>
+                  </h2>
                 </div>
-                <select
-                  style={{
-                    background: "var(--bg)",
-                    border: "1px solid var(--border)",
-                    color: "var(--muted)",
-                    borderRadius: 8,
-                    padding: "5px 10px",
-                    fontSize: 12,
-                    fontFamily: "inherit",
-                    outline: "none",
-                  }}
-                >
-                  <option>Last 6 Months</option>
-                </select>
+                <p className="text-xs font-bold text-[var(--muted)] opacity-70 ml-5">
+                  Total experiments per month — last 6 months
+                </p>
               </div>
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={totalMonthlyData} barCategoryGap="30%">
+              {/* <select className="bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest outline-none shadow-sm hover:border-[var(--primary)] transition-colors appearance-none cursor-pointer">
+                <option>H1 ANALYSIS (JAN-JUN)</option>
+              </select> */}
+            </div>
+
+            <div className="h-[300px] w-full relative z-10">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={totalMonthlyData} barCategoryGap="25%">
                   <CartesianGrid
-                    strokeDasharray="3 3"
+                    strokeDasharray="4 4"
                     stroke="var(--border)"
                     vertical={false}
+                    opacity={0.5}
                   />
                   <XAxis
                     dataKey="month"
-                    tick={{ fill: "var(--muted)", fontSize: 12 }}
+                    tick={{
+                      fill: "var(--muted)",
+                      fontSize: 10,
+                      fontWeight: 800,
+                    }}
                     axisLine={false}
                     tickLine={false}
+                    interval={0}
                   />
                   <YAxis
-                    tick={{ fill: "var(--muted)", fontSize: 12 }}
+                    tick={{
+                      fill: "var(--muted)",
+                      fontSize: 10,
+                      fontWeight: 800,
+                    }}
                     axisLine={false}
                     tickLine={false}
                   />
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip
+                    content={<CustomTooltip />}
+                    cursor={{ fill: "var(--primary)", opacity: 0.03 }}
+                  />
                   <Bar
                     dataKey="total"
                     fill="var(--primary)"
-                    radius={[6, 6, 0, 0]}
+                    radius={[8, 8, 0, 0]}
+                    animationDuration={2000}
                   />
                 </BarChart>
               </ResponsiveContainer>
-              <div style={{ display: "flex", gap: 18, marginTop: 12 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    fontSize: 11,
-                    color: "var(--muted)",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 2,
-                      background: "var(--primary)",
-                    }}
-                  />
-                  Total Experiments
-                </div>
-              </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
 
           {/* Experiments Table */}
           {role === "Manager" && (
-            <Card noPad>
-              <div
-                style={{
-                  padding: "18px 24px",
-                  borderBottom: "1px solid var(--border)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 700,
-                      color: "var(--text)",
-                    }}
-                  >
+            <Card
+              noPad
+              className="overflow-hidden border-[var(--border)] shadow-2xl shadow-black/5 dark:shadow-none rounded-[32px]"
+            >
+              <div className="p-8 border-b border-[var(--border)] bg-gradient-to-r from-[var(--primary)]/5 to-transparent">
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="text-[var(--primary)]" size={20} />
+                  <h2 className="text-lg font-black text-[var(--text)] uppercase tracking-widest">
                     Recent Experiments
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "var(--muted)",
-                      marginTop: 2,
-                    }}
-                  >
-                    Latest cooking experiments submitted
-                  </div>
+                  </h2>
                 </div>
-                {/* <button
-                  className="btn-primary"
-                  style={{ display: "flex", alignItems: "center", gap: 6 }}
-                >
-                  <Download size={13} /> Export
-                </button> */}
+                <p className="text-xs font-bold text-[var(--muted)] mt-1 ml-8 font-jakarta">
+                  Latest cooking experiments submitted
+                </p>
               </div>
-              <div style={{ overflowX: "auto" }}>
-                <table className="table">
-                  <thead>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-[var(--bg)] text-[var(--muted)] text-[10px] font-black uppercase tracking-[0.2em]">
                     <tr>
-                      {["Exp ID", "Recipe", "Date", "Chef", "AI Score"].map(
-                        (h) => (
-                          <th key={h}>{h}</th>
-                        ),
-                      )}
+                      <th className="px-8 py-5 border-b border-[var(--border)]">
+                        Identity
+                      </th>
+                      <th className="px-8 py-5 border-b border-[var(--border)]">
+                        Target Recipe
+                      </th>
+                      <th className="px-8 py-5 border-b border-[var(--border)] hidden sm:table-cell">
+                        Timeline
+                      </th>
+                      <th className="px-8 py-5 border-b border-[var(--border)]">
+                        Operator
+                      </th>
+                      <th className="px-8 py-5 border-b border-[var(--border)] text-right">
+                        Confidence Score
+                      </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y divide-[var(--border)]/50">
                     {experiments.map((e) => (
-                      <tr key={e.id} className="table-row">
-                        <td className="table-cell-primary">{e.id}</td>
-                        <td style={{ fontWeight: 500 }}>{e.recipe}</td>
-                        <td className="table-cell-muted">{e.date}</td>
-                        <td>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 8,
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: 26,
-                                height: 26,
-                                borderRadius: "50%",
-                                background: "var(--primary-glow)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: 9,
-                                fontWeight: 800,
-                                color: "var(--primary)",
-                              }}
-                            >
+                      <tr
+                        key={e.id}
+                        className="hover:bg-[var(--primary-glow)] transition-all group group cursor-pointer duration-300"
+                      >
+                        <td className="px-8 py-6">
+                          <span className="font-mono text-[11px] font-black text-[var(--primary)] opacity-70 group-hover:opacity-100 transition-opacity">
+                            {e.id}
+                          </span>
+                        </td>
+                        <td className="px-8 py-6">
+                          <div className="font-black text-sm text-[var(--text)] tracking-tight group-hover:text-[var(--primary)] transition-colors">
+                            {e.recipe}
+                          </div>
+                        </td>
+                        <td className="px-8 py-6 text-xs font-bold text-[var(--muted)] hidden sm:table-cell">
+                          {e.date}
+                        </td>
+                        <td className="px-8 py-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-black text-[var(--primary)] shadow-sm group-hover:scale-110 transition-transform">
                               {e.chef
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
                             </div>
-                            <span
-                              style={{ fontSize: 13, color: "var(--text)" }}
-                            >
+                            <span className="text-xs font-bold text-[var(--text)] tracking-tight">
                               {e.chef}
                             </span>
                           </div>
                         </td>
-                        <td>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 8,
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: 52,
-                                height: 4,
-                                background: "var(--bg)",
-                                borderRadius: 2,
-                              }}
-                            >
+                        <td className="px-8 py-6">
+                          <div className="flex items-center justify-end gap-4 min-w-[120px]">
+                            <div className="flex-1 h-2 bg-[var(--bg)] rounded-full overflow-hidden max-w-[80px] shadow-inner">
                               <div
-                                style={{
-                                  height: "100%",
-                                  borderRadius: 2,
-                                  width: `${e.aiScore}%`,
-                                  background:
-                                    e.aiScore > 80
-                                      ? "var(--success)"
-                                      : e.aiScore > 60
-                                        ? "var(--warning)"
-                                        : "var(--danger)",
-                                }}
+                                style={{ width: `${e.aiScore}%` }}
+                                className={`h-full rounded-full transition-all duration-1000 ${
+                                  e.aiScore > 80
+                                    ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                                    : e.aiScore > 60
+                                      ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                                      : "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.3)]"
+                                }`}
                               />
                             </div>
-                            <span
-                              style={{
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "var(--text)",
-                              }}
-                            >
-                              {e.aiScore}
+                            <span className="text-xs font-black text-[var(--text)] w-8 text-right">
+                              {e.aiScore}%
                             </span>
                           </div>
                         </td>
@@ -701,20 +669,29 @@ export default function DashboardPage() {
   );
 }
 
-function SummaryCard({ icon, count, label, bgColor, countSuffix = "" }) {
+function SummaryCard({ icon, count, label, bgColor, accentColor }) {
+  const accentClasses = {
+    orange: "group-hover:text-orange-600 shadow-orange-500/10",
+    emerald: "group-hover:text-emerald-600 shadow-emerald-500/10",
+    amber: "group-hover:text-amber-600 shadow-amber-500/10",
+    indigo: "group-hover:text-indigo-600 shadow-indigo-500/10",
+    rose: "group-hover:text-rose-600 shadow-rose-500/10",
+  }[accentColor || "orange"];
+
   return (
-    <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+    <div className="group bg-[var(--surface)] p-8 rounded-[32px] border border-[var(--border)] shadow-xl shadow-black/5 dark:shadow-none hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-current to-transparent opacity-[0.03] -mr-16 -mt-16 rounded-full" />
+
       <div
-        className={`w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center mb-4 transition-transform group-hover:scale-110`}
+        className={`w-14 h-14 rounded-2xl ${bgColor} flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg ${accentClasses}`}
       >
-        {React.cloneElement(icon, { size: 24 })}
+        {React.cloneElement(icon, { size: 28, strokeWidth: 2.5 })}
       </div>
-      <div className="space-y-1">
-        <h3 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <div className="space-y-2">
+        <h3 className="text-4xl font-black text-[var(--text)] tracking-tighter">
           {count}
-          {countSuffix}
         </h3>
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <p className="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] opacity-80">
           {label}
         </p>
       </div>
@@ -728,14 +705,17 @@ function StatusPill({ status }) {
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.15em] shadow-sm ${
         isCompleted
-          ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+          ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
           : isPending
-            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-            : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+            ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+            : "bg-rose-500/10 text-rose-600 border border-rose-500/20"
       }`}
     >
+      <div
+        className={`w-1.5 h-1.5 rounded-full mr-2 ${isCompleted ? "bg-emerald-500" : isPending ? "bg-amber-500" : "bg-rose-500"} animate-pulse`}
+      />
       {status}
     </span>
   );
@@ -743,18 +723,18 @@ function StatusPill({ status }) {
 
 function StaffCard({ icon, label, count, bgColor }) {
   return (
-    <div className="group bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-      <div className="flex items-center gap-4">
+    <div className="group bg-[var(--surface)] p-6 rounded-[24px] border border-[var(--border)] shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
+      <div className="flex items-center gap-5">
         <div
-          className={`w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center transition-transform group-hover:scale-110`}
+          className={`w-14 h-14 rounded-2xl ${bgColor} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg shadow-inner`}
         >
-          {icon}
+          {React.cloneElement(icon, { size: 24, strokeWidth: 2.5 })}
         </div>
         <div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div className="text-3xl font-black text-[var(--text)] tracking-tighter">
             {count}
           </div>
-          <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest opacity-80">
             {label}
           </div>
         </div>

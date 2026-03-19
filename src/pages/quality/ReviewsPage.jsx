@@ -273,13 +273,12 @@ export default function ReviewsPage() {
 
   const renderStars = (value) => {
     return (
-      <div style={{ display: "flex", gap: 4 }}>
+      <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((s) => (
           <Star
             key={s}
-            size={18}
-            fill={s <= value ? "#f59e0b" : "transparent"}
-            color={s <= value ? "#f59e0b" : "var(--border)"}
+            size={16}
+            className={`${s <= value ? "fill-amber-500 text-amber-500" : "fill-transparent text-[var(--border)]"}`}
           />
         ))}
       </div>
@@ -297,21 +296,21 @@ export default function ReviewsPage() {
     if (q.type === "rating_stars") return renderStars(answer);
     if (q.type === "yes_no") {
       return (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div className="flex items-center gap-2">
           {answer === "yes" ? (
-            <>
-              <ThumbsUp size={16} style={{ color: "var(--success)" }} />
-              <span style={{ fontWeight: 700, color: "var(--success)" }}>
-                Yes
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-lg">
+              <ThumbsUp size={14} className="text-emerald-500" />
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-600">
+                YES
               </span>
-            </>
+            </div>
           ) : (
-            <>
-              <ThumbsDown size={16} style={{ color: "var(--danger)" }} />
-              <span style={{ fontWeight: 700, color: "var(--danger)" }}>
-                No
+            <div className="flex items-center gap-2 px-3 py-1 bg-rose-500/10 rounded-lg">
+              <ThumbsDown size={14} className="text-rose-500" />
+              <span className="text-[11px] font-black uppercase tracking-wider text-rose-600">
+                NO
               </span>
-            </>
+            </div>
           )}
         </div>
       );
@@ -330,120 +329,59 @@ export default function ReviewsPage() {
   };
 
   return (
-    <div style={{ animation: "fadeIn 0.4s ease-out" }}>
+    <div className="animate-fade-in">
       <PageHeader
-        title="Submit Feedbacks"
-        subtitle="View and track all quality reviews by status."
+        title="Quality Feedback"
+        subtitle="Comprehensive review history and quality assurance metrics."
         actions={[
-          <div key="stats" style={{ display: "flex", gap: 12 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 16px",
-                background: "var(--warning-glow)",
-                borderRadius: 10,
-                border: "1px solid rgba(245,158,11,0.2)",
-                fontSize: 13,
-                fontWeight: 700,
-                color: "var(--warning)",
-              }}
-            >
-              <Clock size={16} /> {pendingCount} Pending
+          <div key="stats" className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-2.5 px-5 py-2.5 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-[11px] font-black text-amber-600 uppercase tracking-widest shadow-sm">
+              <Clock size={14} strokeWidth={3} className="animate-pulse" />{" "}
+              {pendingCount} Pending Audit
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 16px",
-                background: "var(--success-glow)",
-                borderRadius: 10,
-                border: "1px solid rgba(34,197,94,0.2)",
-                fontSize: 13,
-                fontWeight: 700,
-                color: "var(--success)",
-              }}
-            >
-              <CheckCircle size={16} /> {completedCount} Completed
+            <div className="flex items-center gap-2.5 px-5 py-2.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-[11px] font-black text-emerald-600 uppercase tracking-widest shadow-sm">
+              <CheckCircle size={14} strokeWidth={3} /> {completedCount}{" "}
+              Approved
             </div>
           </div>,
         ]}
       />
 
       {/* Search & Filter Bar */}
-      <Card style={{ marginBottom: 24 }}>
-        <div
-          style={{
-            display: "flex",
-            gap: 16,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ flex: 1, minWidth: 250, position: "relative" }}>
+      <Card className="mb-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+          <div className="flex-1 min-w-0 lg:min-w-[250px] relative">
             <Search
               size={16}
-              style={{
-                position: "absolute",
-                left: 14,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--muted)",
-              }}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)]"
             />
             <input
               type="text"
               placeholder="Search by recipe, ID, or chef..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field"
-              style={{ paddingLeft: 40, fontSize: 14, width: "100%" }}
+              className="input-field pl-10 text-sm w-full"
             />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 6,
-              padding: 4,
-              background: "var(--bg-subtle)",
-              borderRadius: 12,
-            }}
-          >
+          <div className="flex flex-wrap gap-1.5 p-1 bg-[var(--bg-subtle)] rounded-xl">
             {statusTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setStatusFilter(tab.id)}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: 8,
-                  border: "none",
-                  background:
-                    statusFilter === tab.id ? "var(--primary)" : "transparent",
-                  color: statusFilter === tab.id ? "white" : "var(--muted)",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-[13px] transition-all duration-200 cursor-pointer border-none ${
+                  statusFilter === tab.id
+                    ? "bg-[var(--primary)] text-white"
+                    : "bg-transparent text-[var(--muted)] hover:text-[var(--text)]"
+                }`}
               >
                 {tab.label}
                 <span
-                  style={{
-                    background:
-                      statusFilter === tab.id
-                        ? "rgba(255,255,255,0.25)"
-                        : "var(--border)",
-                    padding: "2px 8px",
-                    borderRadius: 20,
-                    fontSize: 11,
-                    fontWeight: 800,
-                  }}
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
+                    statusFilter === tab.id
+                      ? "bg-white/25"
+                      : "bg-[var(--border)]"
+                  }`}
                 >
                   {tab.count}
                 </span>
@@ -454,559 +392,358 @@ export default function ReviewsPage() {
       </Card>
 
       {/* Reviews List */}
-      <Card noPad>
-        {/* Table Header */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: tableColumns,
-            gap: 16,
-            padding: "16px 24px",
-            borderBottom: "2px solid var(--border)",
-            fontSize: 11,
-            fontWeight: 700,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-          }}
-        >
-          <span>Experiment</span>
-          <span>Chef</span>
-          <span>Date</span>
-          <span>Time</span>
-          {showAIScore && <span>AI Score</span>}
-          <span>Status</span>
-          <span></span>
-        </div>
-
-        {filteredExperiments.length === 0 ? (
-          <div
-            style={{
-              padding: "60px 40px",
-              textAlign: "center",
-              color: "var(--muted)",
-            }}
-          >
-            <Search size={40} style={{ opacity: 0.2, marginBottom: 16 }} />
-            <div style={{ fontSize: 15, fontWeight: 600 }}>
-              No reviews found
+      <Card
+        noPad
+        className="overflow-hidden border-[var(--border)] shadow-2xl shadow-black/5 dark:shadow-none rounded-[32px]"
+      >
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="min-w-[1000px] lg:min-w-full">
+            {/* Table Header */}
+            <div
+              className={`grid gap-4 px-8 py-6 border-b border-[var(--border)] text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] bg-[var(--bg)]/50 backdrop-blur-md sticky top-0 z-10`}
+              style={{ gridTemplateColumns: tableColumns }}
+            >
+              <span>Experiment Identity</span>
+              <span>Primary Chef</span>
+              <span>Submission Date</span>
+              <span>Timestamp</span>
+              {showAIScore && <span>AI Consensus</span>}
+              <span className="text-center">Audit Status</span>
+              <span></span>
             </div>
-            <div style={{ fontSize: 13, marginTop: 4 }}>
-              Try adjusting your search or filter.
-            </div>
-          </div>
-        ) : (
-          filteredExperiments.map((exp) => {
-            const isExpanded = expandedId === exp.id;
-            const reviewData = MOCK_REVIEW_DATA[exp.id];
 
-            return (
-              <div key={exp.id}>
-                {/* Row */}
-                <div
-                  onClick={() => setExpandedId(isExpanded ? null : exp.id)}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: tableColumns,
-                    gap: 16,
-                    padding: "18px 24px",
-                    borderBottom: isExpanded
-                      ? "none"
-                      : "1px solid var(--border)",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    background: isExpanded
-                      ? "var(--primary-glow)"
-                      : "transparent",
-                    borderLeft: isExpanded
-                      ? "4px solid var(--primary)"
-                      : "4px solid transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isExpanded)
-                      e.currentTarget.style.background = "var(--bg-subtle)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isExpanded)
-                      e.currentTarget.style.background = "transparent";
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: "var(--text)",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {exp.recipe}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "var(--muted)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {exp.id} • Batch {exp.batchNo}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "var(--text)",
-                    }}
-                  >
-                    {exp.chef}
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      fontSize: 13,
-                      color: "var(--muted)",
-                    }}
-                  >
-                    <Calendar size={13} />
-                    {exp.date}
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      fontSize: 13,
-                      color: "var(--muted)",
-                    }}
-                  >
-                    {exp.time || "—"}
-                  </div>
-
-                  {showAIScore && (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      {exp.status === "Completed" ? (
-                        <div
-                          style={{
-                            padding: "4px 12px",
-                            borderRadius: 8,
-                            background: `${getAiScoreColor(exp.aiScore)}15`,
-                            color: getAiScoreColor(exp.aiScore),
-                            fontWeight: 800,
-                            fontSize: 13,
-                            border: `1px solid ${getAiScoreColor(exp.aiScore)}30`,
-                          }}
-                        >
-                          {exp.aiScore}/100
-                        </div>
-                      ) : (
-                        <span
-                          style={{ color: "var(--muted)", fontWeight: 700 }}
-                        >
-                          —
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <StatusBadge status={exp.status} />
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "var(--muted)",
-                      transition: "transform 0.3s",
-                      transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                    }}
-                  >
-                    <ChevronDown size={18} />
-                  </div>
+            {filteredExperiments.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 px-8 text-center bg-gradient-to-b from-transparent to-[var(--bg)]/30">
+                <div className="w-20 h-20 bg-[var(--border)]/30 rounded-[32px] flex items-center justify-center mb-6">
+                  <Search
+                    size={32}
+                    className="text-[var(--muted)] opacity-50"
+                  />
                 </div>
+                <div className="text-xl font-black text-[var(--text)] uppercase tracking-widest">
+                  Zero Records Found
+                </div>
+                <p className="text-xs font-bold text-[var(--muted)] mt-2 max-w-[280px] leading-relaxed">
+                  We couldn't find any results matching your current filters or
+                  search query.
+                </p>
+              </div>
+            ) : (
+              filteredExperiments.map((exp) => {
+                const isExpanded = expandedId === exp.id;
+                const reviewData = MOCK_REVIEW_DATA[exp.id];
 
-                {/* Expanded Detail */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      style={{ overflow: "hidden" }}
+                return (
+                  <div key={exp.id}>
+                    {/* Row */}
+                    <div
+                      onClick={() => setExpandedId(isExpanded ? null : exp.id)}
+                      className={`grid gap-4 px-8 py-7 cursor-pointer transition-all duration-500 border-l-[6px] relative group overflow-hidden ${
+                        isExpanded
+                          ? "bg-[var(--primary-glow)] border-[var(--primary)]"
+                          : "bg-transparent border-transparent hover:bg-[var(--bg)] border-b border-[var(--border)]/50"
+                      }`}
+                      style={{ gridTemplateColumns: tableColumns }}
                     >
-                      <div
-                        style={{
-                          padding: "24px 28px 28px",
-                          background: "var(--bg-subtle)",
-                          borderBottom: "2px solid var(--primary)",
-                        }}
-                      >
-                        {/* Experiment Info Grid */}
-                        <div
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(5, 1fr)",
-                            gap: 20,
-                            padding: "20px",
-                            background: "var(--card-bg)",
-                            borderRadius: 16,
-                            border: "1px solid var(--border)",
-                            marginBottom: 24,
-                          }}
-                        >
-                          <div>
-                            <div
-                              style={{
-                                fontSize: 11,
-                                color: "var(--muted)",
-                                textTransform: "uppercase",
-                                fontWeight: 700,
-                                marginBottom: 6,
-                              }}
-                            >
-                              Ingredients
-                            </div>
-                            <div style={{ fontSize: 15, fontWeight: 700 }}>
-                              {getIngredientText(exp)}
-                            </div>
-                          </div>
-                          <div>
-                            <div
-                              style={{
-                                fontSize: 11,
-                                color: "var(--muted)",
-                                textTransform: "uppercase",
-                                fontWeight: 700,
-                                marginBottom: 6,
-                              }}
-                            >
-                              Temperature
-                            </div>
-                            <div style={{ fontSize: 15, fontWeight: 700 }}>
-                              {exp.temp}°C
-                            </div>
-                          </div>
-                          <div>
-                            <div
-                              style={{
-                                fontSize: 11,
-                                color: "var(--muted)",
-                                textTransform: "uppercase",
-                                fontWeight: 700,
-                                marginBottom: 6,
-                              }}
-                            >
-                              Version
-                            </div>
-                            <div style={{ fontSize: 15, fontWeight: 700 }}>
-                              {exp.version}
-                            </div>
-                          </div>
-                          <div>
-                            <div
-                              style={{
-                                fontSize: 11,
-                                color: "var(--muted)",
-                                textTransform: "uppercase",
-                                fontWeight: 700,
-                                marginBottom: 6,
-                              }}
-                            >
-                              Timing
-                            </div>
-                            <div style={{ fontSize: 15, fontWeight: 700 }}>
-                              {exp.timing} min
-                            </div>
-                          </div>
+                      {isExpanded && (
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[var(--primary)]/5 to-transparent pointer-events-none" />
+                      )}
+
+                      <div className="relative z-10">
+                        <div className="text-sm font-black text-[var(--text)] tracking-tight group-hover:text-[var(--primary)] transition-colors">
+                          {exp.recipe}
                         </div>
+                        <div className="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] mt-1.5 opacity-60">
+                          {exp.id} • BATCH-{exp.batchNo}
+                        </div>
+                      </div>
 
-                        {reviewData ? (
-                          <>
-                            {/* Reviewed By */}
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 16,
-                                marginBottom: 24,
-                                alignItems: "center",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  padding: "8px 16px",
-                                  background: "var(--primary-glow)",
-                                  borderRadius: 10,
-                                  fontSize: 13,
-                                  fontWeight: 700,
-                                  color: "var(--primary)",
-                                  border: "1px solid var(--primary)",
-                                }}
-                              >
-                                Reviewed by: {reviewData.reviewedBy}
+                      <div className="flex items-center text-xs font-bold text-[var(--text)] relative z-10">
+                        <div className="w-7 h-7 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[9px] font-black text-[var(--primary)] mr-2.5 shadow-sm group-hover:scale-110 transition-transform">
+                          {exp.chef
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </div>
+                        {exp.chef}
+                      </div>
+
+                      <div className="flex items-center gap-2 text-xs font-bold text-[var(--muted)] relative z-10">
+                        <Calendar size={13} className="opacity-50" />
+                        {exp.date}
+                      </div>
+
+                      <div className="flex items-center text-xs font-bold text-[var(--muted)] relative z-10">
+                        {exp.time || "—"}
+                      </div>
+
+                      {showAIScore && (
+                        <div className="flex items-center relative z-10">
+                          {exp.status === "Completed" ? (
+                            <div className="flex items-center gap-3 w-full max-w-[120px]">
+                              <div className="flex-1 h-1.5 bg-[var(--bg)] rounded-full overflow-hidden shadow-inner">
+                                <div
+                                  style={{ width: `${exp.aiScore}%` }}
+                                  className={`h-full rounded-full transition-all duration-1000 ${
+                                    exp.aiScore > 80
+                                      ? "bg-emerald-500"
+                                      : exp.aiScore > 60
+                                        ? "bg-amber-500"
+                                        : "bg-rose-500"
+                                  }`}
+                                />
                               </div>
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  color: "var(--muted)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                }}
-                              >
-                                <Calendar size={14} />
-                                {reviewData.reviewedDate}
-                              </div>
+                              <span className="text-[11px] font-black text-[var(--text)] w-8 text-right">
+                                {exp.aiScore}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest opacity-40">
+                              AWAITING
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-center relative z-10">
+                        <StatusBadge status={exp.status} />
+                      </div>
+
+                      <div className="flex items-center justify-end relative z-10">
+                        <div
+                          className={`w-8 h-8 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] transition-all duration-500 group-hover:border-[var(--primary)] group-hover:text-[var(--primary)] ${
+                            isExpanded
+                              ? "rotate-180 bg-[var(--primary)] text-white border-[var(--primary)]"
+                              : "rotate-0"
+                          }`}
+                        >
+                          <ChevronDown size={14} strokeWidth={3} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expanded Detail */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="bg-[var(--bg-subtle)] border-b-2 border-[var(--primary)] text-[var(--text)]"
+                        >
+                          <div className="p-10 md:p-12 space-y-12">
+                            {/* Experiment Info Grid */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 p-8 bg-[var(--surface)] rounded-[32px] border border-[var(--border)] shadow-inner relative overflow-hidden">
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--primary)]/5 to-transparent rounded-full -mr-16 -mt-16" />
+                              {[
+                                {
+                                  label: "Selected Ingredients",
+                                  val: getIngredientText(exp),
+                                  icon: Utensils,
+                                  color: "orange",
+                                },
+                                {
+                                  label: "Cooking Precision",
+                                  val: `${exp.temp}°C`,
+                                  icon: Activity,
+                                  color: "rose",
+                                },
+                                {
+                                  label: "Product Version",
+                                  val: `${exp.version}`,
+                                  icon: Zap,
+                                  color: "amber",
+                                },
+                                {
+                                  label: "Cycle Duration",
+                                  val: `${exp.timing} MIN`,
+                                  icon: Clock,
+                                  color: "indigo",
+                                },
+                              ].map((item) => (
+                                <div key={item.label} className="space-y-2">
+                                  <div className="text-[10px] text-[var(--muted)] uppercase font-black tracking-[0.2em] opacity-60 flex items-center gap-2">
+                                    {item.label}
+                                  </div>
+                                  <div className="text-base font-black text-[var(--text)] tracking-tight">
+                                    {item.val}
+                                  </div>
+                                </div>
+                              ))}
                             </div>
 
-                            {/* Sensory Scores */}
-                            <div style={{ marginBottom: 24 }}>
-                              <h4
-                                style={{
-                                  fontSize: 15,
-                                  fontWeight: 700,
-                                  marginBottom: 16,
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  color: "var(--text)",
-                                }}
-                              >
-                                <Activity
-                                  size={16}
-                                  style={{
-                                    color: "var(--primary)",
-                                  }}
-                                />
-                                Sensory Scores
-                              </h4>
-                              <div
-                                style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "repeat(3, 1fr)",
-                                  gap: 12,
-                                }}
-                              >
-                                {sensoryLabels.map((s) => {
-                                  const val = reviewData.sensoryScores[s.key];
-                                  return (
-                                    <div
-                                      key={s.key}
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        padding: "12px 16px",
-                                        background: "var(--card-bg)",
-                                        borderRadius: 12,
-                                        border: "1px solid var(--border)",
-                                      }}
-                                    >
-                                      <div
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          gap: 8,
-                                          fontSize: 13,
-                                          fontWeight: 600,
-                                          color: "var(--text)",
-                                        }}
-                                      >
-                                        <s.icon
-                                          size={14}
-                                          style={{
-                                            color: s.color,
-                                          }}
-                                        />
-                                        {s.label}
-                                      </div>
-                                      <div
-                                        style={{
-                                          fontWeight: 800,
-                                          fontSize: 15,
-                                          color: getScoreColor(val),
-                                        }}
-                                      >
-                                        {val}/10
-                                      </div>
+                            {reviewData ? (
+                              <div className="space-y-12 pb-4">
+                                {/* Reviewed By Header */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-8 bg-[var(--surface)] rounded-[32px] border-l-[6px] border-[var(--primary)] shadow-sm">
+                                  <div className="flex items-center gap-5">
+                                    <div className="w-14 h-14 rounded-2xl bg-[var(--primary-glow)] flex items-center justify-center text-lg font-black text-[var(--primary)] shadow-inner border border-[var(--primary)]/20">
+                                      {reviewData.reviewedBy?.charAt(0)}
                                     </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            {/* Questions & Answers */}
-                            <div style={{ marginBottom: 24 }}>
-                              <h4
-                                style={{
-                                  fontSize: 15,
-                                  fontWeight: 700,
-                                  marginBottom: 16,
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  color: "var(--text)",
-                                }}
-                              >
-                                <CheckCircle
-                                  size={16}
-                                  style={{
-                                    color: "var(--success)",
-                                  }}
-                                />
-                                General Feedback Questions
-                              </h4>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: 12,
-                                }}
-                              >
-                                {STATIC_QUESTIONS.map((q, i) => (
-                                  <div
-                                    key={q.id}
-                                    style={{
-                                      padding: "16px 20px",
-                                      background: "var(--card-bg)",
-                                      borderRadius: 12,
-                                      border: "1px solid var(--border)",
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        fontSize: 13,
-                                        fontWeight: 700,
-                                        color: "var(--text)",
-                                        marginBottom: 10,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 8,
-                                      }}
-                                    >
-                                      <span
-                                        style={{
-                                          color: "var(--primary)",
-                                          fontWeight: 800,
-                                        }}
-                                      >
-                                        Q{i + 1}.
-                                      </span>
-                                      {q.question}
-                                    </div>
-                                    <div
-                                      style={{
-                                        paddingLeft: 32,
-                                      }}
-                                    >
-                                      {renderAnswer(
-                                        q,
-                                        reviewData.answers[q.id],
-                                      )}
+                                    <div>
+                                      <div className="text-xs font-black text-[var(--muted)] uppercase tracking-widest mb-1">
+                                        AUDIT CONDUCTED BY
+                                      </div>
+                                      <div className="text-lg font-black text-[var(--text)] tracking-tight">
+                                        {reviewData.reviewedBy}
+                                      </div>
                                     </div>
                                   </div>
-                                ))}
-                              </div>
-                            </div>
+                                  <div className="flex items-center gap-3 px-6 py-3 bg-[var(--bg)] rounded-2xl border border-[var(--border)] text-xs font-bold text-[var(--muted)] shadow-sm">
+                                    <Calendar
+                                      size={16}
+                                      className="text-[var(--primary)] opacity-70"
+                                    />
+                                    <span className="uppercase tracking-widest">
+                                      {reviewData.reviewedDate}
+                                    </span>
+                                  </div>
+                                </div>
 
-                            {/* Remarks */}
-                            {reviewData.remarks && (
-                              <div
-                                style={{
-                                  padding: "16px 20px",
-                                  background: "var(--card-bg)",
-                                  borderRadius: 12,
-                                  border: "1px solid var(--border)",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    fontSize: 13,
-                                    fontWeight: 700,
-                                    color: "var(--text)",
-                                    marginBottom: 8,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 8,
-                                  }}
-                                >
-                                  <MessageSquare
-                                    size={14}
-                                    style={{
-                                      color: "var(--primary)",
-                                    }}
+                                {/* Sensory Intelligence */}
+                                <div className="space-y-6">
+                                  <div className="flex items-center gap-3 px-2">
+                                    <div className="w-2 h-6 bg-indigo-500 rounded-full" />
+                                    <h4 className="text-sm font-black text-[var(--text)] uppercase tracking-[0.2em]">
+                                      Sensory Analytics
+                                    </h4>
+                                  </div>
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                    {sensoryLabels.map((s) => {
+                                      const val =
+                                        reviewData.sensoryScores[s.key];
+                                      return (
+                                        <div
+                                          key={s.key}
+                                          className="group flex items-center justify-between p-6 bg-[var(--surface)] rounded-[24px] border border-[var(--border)] hover:border-[var(--primary)]/30 hover:shadow-xl hover:shadow-black/5 transition-all duration-500 relative overflow-hidden"
+                                        >
+                                          <div
+                                            className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-current to-transparent opacity-[0.03] -mr-8 -mt-8 rounded-full"
+                                            style={{ color: s.color }}
+                                          />
+                                          <div className="flex items-center gap-4 relative z-10">
+                                            <div
+                                              className="w-12 h-12 rounded-xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500"
+                                              style={{
+                                                backgroundColor: `${s.color}10`,
+                                                color: s.color,
+                                              }}
+                                            >
+                                              <s.icon
+                                                size={20}
+                                                strokeWidth={2.5}
+                                              />
+                                            </div>
+                                            <span className="text-xs font-bold text-[var(--text)] uppercase tracking-widest opacity-80">
+                                              {s.label}
+                                            </span>
+                                          </div>
+                                          <div
+                                            className="text-xl font-black relative z-10"
+                                            style={{
+                                              color: getScoreColor(val),
+                                            }}
+                                          >
+                                            {val}
+                                            <span className="text-[10px] opacity-40 ml-1">
+                                              /10
+                                            </span>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Modular Response Section */}
+                                <div className="space-y-6">
+                                  <div className="flex items-center gap-3 px-2">
+                                    <div className="w-2 h-6 bg-emerald-500 rounded-full" />
+                                    <h4 className="text-sm font-black text-[var(--text)] uppercase tracking-[0.2em]">
+                                      Compliance Assessment
+                                    </h4>
+                                  </div>
+                                  <div className="grid grid-cols-1 gap-4">
+                                    {STATIC_QUESTIONS.map((q, i) => (
+                                      <div
+                                        key={q.id}
+                                        className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-7 bg-[var(--surface)] rounded-[28px] border border-[var(--border)] hover:bg-[var(--bg)]/30 transition-colors duration-500"
+                                      >
+                                        <div className="flex gap-5 max-w-2xl">
+                                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--bg)] border border-[var(--border)] flex items-center justify-center text-[10px] font-black text-[var(--primary)] shadow-sm">
+                                            {i + 1}
+                                          </div>
+                                          <div className="text-sm font-bold text-[var(--text)] leading-relaxed tracking-tight">
+                                            {q.question}
+                                          </div>
+                                        </div>
+                                        <div className="flex-shrink-0 flex justify-end md:justify-center min-w-[120px]">
+                                          {renderAnswer(
+                                            q,
+                                            reviewData.answers[q.id],
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Executive Summary / Remarks */}
+                                {reviewData.remarks && (
+                                  <div className="space-y-6">
+                                    <div className="flex items-center gap-3 px-2">
+                                      <div className="w-2 h-6 bg-orange-500 rounded-full" />
+                                      <h4 className="text-sm font-black text-[var(--text)] uppercase tracking-[0.2em]">
+                                        Reviewer Conclusion
+                                      </h4>
+                                    </div>
+                                    <div className="p-8 bg-orange-500/5 rounded-[32px] border border-orange-500/10 relative overflow-hidden group">
+                                      <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 rounded-full" />
+                                      <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <MessageSquare
+                                          size={48}
+                                          className="text-orange-500"
+                                        />
+                                      </div>
+                                      <div className="text-sm text-[var(--text)] leading-[1.8] font-bold tracking-tight italic relative z-10 pl-4">
+                                        “ {reviewData.remarks} ”
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              /* Pending Review - No Data Yet */
+                              <div className="py-20 px-8 text-center bg-[var(--surface)] rounded-[40px] border border-dashed border-[var(--border)] relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-b from-amber-500/[0.02] to-transparent pointer-events-none" />
+                                <div className="w-24 h-24 bg-amber-500/10 rounded-[40px] flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-700">
+                                  <Clock
+                                    size={40}
+                                    strokeWidth={2.5}
+                                    className="text-amber-500 animate-pulse"
                                   />
-                                  Additional Remarks
                                 </div>
-                                <div
-                                  style={{
-                                    fontSize: 14,
-                                    color: "var(--text)",
-                                    lineHeight: 1.6,
-                                    paddingLeft: 22,
-                                  }}
-                                >
-                                  {reviewData.remarks}
+                                <div className="text-2xl font-black text-[var(--text)] uppercase tracking-widest mb-3">
+                                  Pending Consensus
                                 </div>
+                                <p className="text-sm text-[var(--muted)] font-bold max-w-sm mx-auto leading-relaxed opacity-70">
+                                  This submission is currently in the quality
+                                  queue. An authorized Reviewer must conduct a
+                                  sensory audit to finalize the status.
+                                </p>
                               </div>
                             )}
-                          </>
-                        ) : (
-                          /* Pending Review - No Data Yet */
-                          <div
-                            style={{
-                              padding: "40px",
-                              textAlign: "center",
-                              background: "var(--card-bg)",
-                              borderRadius: 16,
-                              border: "1px solid var(--border)",
-                            }}
-                          >
-                            <Clock
-                              size={40}
-                              style={{
-                                color: "var(--warning)",
-                                opacity: 0.5,
-                                marginBottom: 16,
-                              }}
-                            />
-                            <div
-                              style={{
-                                fontSize: 16,
-                                fontWeight: 700,
-                                color: "var(--text)",
-                                marginBottom: 6,
-                              }}
-                            >
-                              Awaiting Review
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                color: "var(--muted)",
-                              }}
-                            >
-                              This experiment has not been reviewed yet. A
-                              Reviewer needs to complete the quality review.
-                            </div>
                           </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })
-        )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
       </Card>
     </div>
   );

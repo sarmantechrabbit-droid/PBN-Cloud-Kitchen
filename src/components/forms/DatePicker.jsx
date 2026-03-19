@@ -170,33 +170,15 @@ export default function DatePicker({
   };
 
   return (
-    <div ref={rootRef} style={{ position: "relative" }}>
+    <div ref={rootRef} className="relative">
       {label && (
-        <label
-          style={{
-            display: "block",
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--muted)",
-            marginBottom: 6,
-          }}
-        >
-          {label} {required && <span style={{ color: "var(--danger)" }}>*</span>}
+        <label className="block text-xs font-semibold text-[var(--muted)] mb-1.5">
+          {label}{" "}
+          {required && <span className="text-[var(--danger)]">*</span>}
         </label>
       )}
-      <div style={{ position: "relative" }}>
-        <span
-          style={{
-            position: "absolute",
-            left: 12,
-            top: "50%",
-            transform: "translateY(-50%)",
-            color: "var(--muted)",
-            pointerEvents: "none",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none flex items-center">
           <Calendar size={16} />
         </span>
         <input
@@ -210,41 +192,20 @@ export default function DatePicker({
           aria-label={label || "Date picker"}
           aria-haspopup="dialog"
           aria-expanded={open}
-          className="input-field"
-          style={{ paddingLeft: 38, cursor: "pointer" }}
+          className="input-field pl-9 cursor-pointer"
         />
       </div>
 
       <div
         role="dialog"
         aria-hidden={!open}
-        style={{
-          position: "absolute",
-          top: "calc(100% + 8px)",
-          left: 0,
-          width: 280,
-          maxWidth: "100%",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 12,
-          // boxShadow: "0 12px 28px var(--primary-glow-strong)",
-          padding: 10,
-          opacity: open ? 1 : 0,
-          transform: open ? "translateY(0)" : "translateY(-6px)",
-          transition: "opacity 0.16s ease, transform 0.16s ease",
-          pointerEvents: open ? "auto" : "none",
-          zIndex: 50,
-        }}
+        className={`absolute top-[calc(100%+8px)] left-0 w-[280px] max-w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2.5 transition-all duration-150 z-50 ${
+          open
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-1.5 pointer-events-none"
+        }`}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 8,
-            gap: 8,
-          }}
-        >
+        <div className="flex items-center justify-between mb-2 gap-2">
           <button
             type="button"
             onClick={() => {
@@ -253,35 +214,16 @@ export default function DatePicker({
               setViewYear(prev.getFullYear());
             }}
             aria-label="Previous month"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--bg)",
-              color: "var(--muted)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
+            className="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--muted)] flex items-center justify-center cursor-pointer hover:bg-[var(--primary-glow)] hover:text-[var(--primary)] transition-colors"
           >
             <ChevronLeft size={14} />
           </button>
 
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div className="flex gap-2 items-center">
             <select
               value={viewMonth}
               onChange={(e) => setViewMonth(parseInt(e.target.value, 10))}
-            style={{
-              background: "var(--bg)",
-              border: "1px solid var(--border)",
-              borderRadius: 8,
-              padding: "4px 6px",
-              fontSize: 11,
-              color: "var(--text)",
-              fontWeight: 600,
-            }}
+              className="bg-[var(--bg)] border border-[var(--border)] rounded-lg p-1 px-1.5 text-[11px] text-[var(--text)] font-semibold outline-none"
               aria-label="Select month"
             >
               {MONTHS.map((m, i) => (
@@ -293,18 +235,10 @@ export default function DatePicker({
             <select
               value={viewYear}
               onChange={(e) => setViewYear(parseInt(e.target.value, 10))}
-            style={{
-              background: "var(--bg)",
-              border: "1px solid var(--border)",
-              borderRadius: 8,
-              padding: "4px 6px",
-              fontSize: 11,
-              color: "var(--text)",
-              fontWeight: 600,
-            }}
+              className="bg-[var(--bg)] border border-[var(--border)] rounded-lg p-1 px-1.5 text-[11px] text-[var(--text)] font-semibold outline-none"
               aria-label="Select year"
             >
-              {Array.from({ length: 8 }, (_, i) => viewYear - 4 + i).map(
+              {Array.from({ length: 12 }, (_, i) => viewYear - 10 + i).map(
                 (year) => (
                   <option key={year} value={year}>
                     {year}
@@ -322,40 +256,17 @@ export default function DatePicker({
               setViewYear(next.getFullYear());
             }}
             aria-label="Next month"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--bg)",
-              color: "var(--muted)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
+            className="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--muted)] flex items-center justify-center cursor-pointer hover:bg-[var(--primary-glow)] hover:text-[var(--primary)] transition-colors"
           >
             <ChevronRight size={14} />
           </button>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(7, 1fr)",
-            gap: 4,
-            marginBottom: 4,
-          }}
-        >
+        <div className="grid grid-cols-7 gap-1 mb-1">
           {WEEKDAYS.map((day) => (
             <div
               key={day}
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                color: "var(--muted)",
-                textAlign: "center",
-              }}
+              className="text-[9px] font-bold text-[var(--muted)] text-center"
             >
               {day}
             </div>
@@ -366,45 +277,27 @@ export default function DatePicker({
           role="grid"
           tabIndex={0}
           onKeyDown={handleKeyDown}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(7, 1fr)",
-            gap: 4,
-          }}
+          className="grid grid-cols-7 gap-1 outline-none"
         >
           {calendarDays.map(({ date, current }, idx) => {
             const isSelected = isSameDay(date, activeDate);
             const isToday = isSameDay(date, today);
-            const isDisabled =
-              minDate && clampToStartOfDay(date) < minDate;
+            const isDisabled = minDate && clampToStartOfDay(date) < minDate;
             return (
               <button
                 key={`${date.toISOString()}-${idx}`}
                 type="button"
                 onClick={() => handleSelect(date)}
                 disabled={isDisabled}
-                style={{
-                  height: 28,
-                  borderRadius: 8,
-                  border: isSelected
-                    ? "1px solid var(--primary)"
-                    : "1px solid transparent",
-                  background: isSelected
-                    ? "var(--primary)"
-                    : isToday
-                      ? "var(--primary-glow)"
-                      : "transparent",
-                  color: isSelected
-                    ? "var(--surface)"
-                    : current
-                      ? "var(--text)"
-                      : "var(--muted)",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: isDisabled ? "not-allowed" : "pointer",
-                  opacity: isDisabled ? 0.4 : 1,
-                  transition: "all 0.15s ease",
-                }}
+                className={`h-7 rounded-lg text-[11px] font-bold transition-all duration-150 border outline-none ${
+                    isDisabled ? "cursor-not-allowed opacity-40 bg-transparent text-[var(--muted)] border-transparent" : "cursor-pointer"
+                } ${
+                    isSelected
+                      ? "bg-[var(--primary)] text-white border-[var(--primary)] shadow-sm"
+                      : isToday
+                        ? "bg-[var(--primary-glow)] text-[var(--primary)] border-transparent"
+                        : "bg-transparent border-transparent hover:bg-[var(--bg)] text-[var(--text)]"
+                  } ${!current && !isSelected ? "text-[var(--muted)]" : ""}`}
                 aria-label={formatDisplayDate(date)}
               >
                 {date.getDate()}

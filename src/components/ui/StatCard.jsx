@@ -3,40 +3,25 @@ import Card from './Card'
 
 export default function StatCard({ icon, label, value, sub, trend, trendUp }) {
   return (
-    <Card style={{ position: 'relative', overflow: 'hidden' }}>
+    <Card className="relative overflow-hidden">
       {/* Decorative glow corner */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0,
-        width: 80, height: 80,
-        background: 'var(--primary-glow)',
-        borderRadius: '0 16px 0 80px',
-        pointerEvents: 'none',
-      }} />
+      <div className="absolute top-0 right-0 w-20 h-20 bg-[var(--primary-glow)] rounded-[0_16px_0_80px] pointer-events-none" />
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div style={{
-          background: 'var(--primary-glow)',
-          borderRadius: 10, padding: 10,
-          color: 'var(--primary)',
-          display: 'flex', alignItems: 'center',
-        }}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="bg-[var(--primary-glow)] rounded-xl p-2.5 text-[var(--primary)] flex items-center">
           {icon}
         </div>
         {trend && (
-          <span style={{
-            display: 'flex', alignItems: 'center', gap: 3,
-            fontSize: 12, fontWeight: 700,
-            color: trendUp ? 'var(--success)' : 'var(--danger)',
-          }}>
+          <span className={`flex items-center gap-1 text-xs font-bold ${trendUp ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}>
             {trendUp ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
             {trend}
           </span>
         )}
       </div>
 
-      <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', letterSpacing: -1 }}>{value}</div>
-      <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>{label}</div>
-      {sub && <div style={{ fontSize: 11, color: 'var(--subtle)', marginTop: 6 }}>{sub}</div>}
+      <div className="text-3xl font-extrabold text-[var(--text)] tracking-tight">{value}</div>
+      <div className="text-[13px] text-[var(--muted)] mt-1">{label}</div>
+      {sub && <div className="text-[11px] text-[var(--subtle)] mt-1.5">{sub}</div>}
     </Card>
   )
 }

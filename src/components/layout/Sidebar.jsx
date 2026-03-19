@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Users,
   ScrollText,
+  X,
 } from "lucide-react";
 
 import { Type } from "lucide-react";
@@ -80,198 +81,143 @@ const navItems = [
   },
 ];
 
-export default function Sidebar({ collapsed, setCollapsed, onLogout }) {
+export default function Sidebar({
+  collapsed,
+  setCollapsed,
+  isMobileOpen,
+  setIsMobileOpen,
+  onLogout,
+}) {
   const location = useLocation();
   const role = localStorage.getItem("ck_role");
   const isChef = role === "Chef";
   const filteredItems = navItems.filter((item) => item.roles?.includes(role));
 
   return (
-    <aside
-      style={{
-        width: collapsed ? 64 : 220,
-        minHeight: "100vh",
-        background: "var(--sidebar-bg)",
-        borderRight: "1px solid var(--border)",
-        display: "flex",
-        flexDirection: "column",
-        transition: "width 0.25s cubic-bezier(0.4,0,0.2,1)",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: 100,
-        overflowX: "hidden",
-      }}
-    >
-      {/* Logo */}
-      <div
-        style={{
-          padding: collapsed ? "12px" : "18px 14px",
-          display: "flex",
-          alignItems: "center",
-          gap: collapsed ? 0 : 10,
-          borderBottom: "1px solid var(--border)",
-          minHeight: 64,
-          justifyContent: collapsed ? "center" : "flex-start",
-        }}
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`fixed top-0 left-0 z-[120] h-screen bg-[var(--sidebar-bg)] border-r border-[var(--border)] transition-all duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] flex flex-col overflow-x-hidden ${
+          collapsed ? "md:w-16" : "md:w-[220px]"
+        } ${isMobileOpen ? "w-[260px] translate-x-0" : "w-[260px] md:translate-x-0 -translate-x-full"}`}
       >
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: collapsed ? 0 : 10,
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            padding: 0,
-            width: collapsed ? 36 : "auto",
-          }}
-          aria-label={collapsed ? "Open sidebar" : "Close sidebar"}
-          title={collapsed ? "Open sidebar" : "Close sidebar"}
+        {/* Logo */}
+        <div
+          className={`flex items-center border-b border-[var(--border)] min-h-[64px] ${
+            collapsed
+              ? "p-3 justify-center"
+              : "py-[18px] px-[14px] gap-[10px] justify-start"
+          }`}
         >
-          <div
-            style={{
-              minWidth: 36,
-              height: 36,
-              background: "var(--primary)",
-              borderRadius: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 4px 14px var(--primary-glow-strong)",
-              flexShrink: 0,
+          <button
+            onClick={() => {
+              setCollapsed(!collapsed);
+              setIsMobileOpen(false);
             }}
+            className={`flex items-center bg-transparent border-none cursor-pointer p-0 ${
+              collapsed ? "w-9" : "auto gap-[10px]"
+            }`}
+            aria-label={collapsed ? "Open sidebar" : "Close sidebar"}
+            title={collapsed ? "Open sidebar" : "Close sidebar"}
           >
-            <ChefHat size={18} color="#fff" />
-          </div>
+            <div className="w-9 h-9 min-w-[36px] bg-[var(--primary)] rounded-[10px] flex items-center justify-center shadow-[0_4px_14px_var(--primary-glow-strong)] shrink-0">
+              <ChefHat size={18} color="#fff" />
+            </div>
+            {!collapsed && (
+              <div className="overflow-hidden text-left">
+                <div className="text-[13px] font-extrabold text-[var(--text)] leading-[1.2] whitespace-nowrap">
+                  Cloud Kitchen
+                </div>
+                <div className="text-[10px] text-[var(--muted)] mt-0.5 whitespace-nowrap">
+                  Kitchen Admin
+                </div>
+              </div>
+            )}
+          </button>
           {!collapsed && (
-            <div style={{ overflow: "hidden", textAlign: "left" }}>
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 800,
-                  color: "var(--text)",
-                  lineHeight: 1.2,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Cloud Kitchen
-              </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  color: "var(--muted)",
-                  marginTop: 2,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Kitchen Admin
-              </div>
+            <button
+              onClick={() => setCollapsed(true)}
+              className="w-[30px] h-[30px] rounded-lg border border-[var(--border)] bg-[var(--bg)] hidden md:flex items-center justify-center cursor-pointer ml-auto"
+              aria-label="Close sidebar"
+              title="Close sidebar"
+            >
+              <Menu size={16} className="text-[var(--muted)]" />
+            </button>
+          )}
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            className="w-[30px] h-[30px] rounded-lg border border-[var(--border)] bg-[var(--bg)] flex md:hidden items-center justify-center cursor-pointer ml-auto"
+          >
+            <X size={16} className="text-[var(--muted)]" />
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="flex-1 p-[10px_8px] overflow-y-auto">
+          {!collapsed && filteredItems.length > 0 && (
+            <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider px-3 pb-[10px] pt-1">
+              Main Menu
             </div>
           )}
-        </button>
-        {!collapsed && (
-          <button
-            onClick={() => setCollapsed(true)}
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--bg)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              marginLeft: "auto",
-            }}
-            aria-label="Close sidebar"
-            title="Close sidebar"
-          >
-            <Menu size={16} style={{ color: "var(--muted)" }} />
-          </button>
-        )}
-      </div>
-
-      {/* Nav links */}
-      <nav style={{ flex: 1, padding: "10px 8px", overflowY: "auto" }}>
-        {!collapsed && filteredItems.length > 0 && (
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              color: "var(--muted)",
-              textTransform: "uppercase",
-              letterSpacing: 1,
-              padding: "4px 12px 10px",
-            }}
-          >
-            Main Menu
-          </div>
-        )}
-        {filteredItems.map((item) => {
-          const isActive =
-            location.pathname === item.to ||
-            (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              style={{
-                textDecoration: "none",
-                display: "block",
-                marginBottom: 2,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "10px 12px",
-                  borderRadius: 10,
-                  background: isActive ? "var(--primary-glow)" : "transparent",
-                  color: isActive ? "var(--primary)" : "var(--muted)",
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: 13,
-                  borderLeft: isActive
-                    ? "2px solid var(--primary)"
-                    : "2px solid transparent",
-                  transition: "all 0.15s",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = "var(--surface-hover)";
-                    e.currentTarget.style.color = "var(--text)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--muted)";
-                  }
-                }}
+          {filteredItems.map((item) => {
+            const isActive =
+              location.pathname === item.to ||
+              (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={() => setIsMobileOpen(false)}
+                className="no-underline block mb-[2px]"
               >
-                <span style={{ minWidth: 18, display: "flex" }}>
-                  {item.icon}
-                </span>
-                {!collapsed && (
-                  <>
-                    <span style={{ whiteSpace: "nowrap", flex: 1 }}>
-                      {item.to === "/recipes" && isChef
-                        ? "Create Experiment"
-                        : item.label}
-                    </span>
-                    {isActive && <ChevronRight size={13} />}
-                  </>
-                )}
-              </div>
-            </NavLink>
-          );
-        })}
-      </nav>
-    </aside>
+                <div
+                  className={`flex items-center gap-3 p-[10px_12px] rounded-[10px] text-[13px] border-l-2 transition-all duration-150 cursor-pointer ${
+                    isActive
+                      ? "bg-[var(--primary-glow)] text-[var(--primary)] font-bold border-[var(--primary)]"
+                      : "bg-transparent text-[var(--muted)] font-medium border-transparent hover:bg-[var(--surface-hover)] hover:text-[var(--text)]"
+                  }`}
+                >
+                  <span className="min-w-[18px] flex">{item.icon}</span>
+                  {!collapsed && (
+                    <>
+                      <span className="whitespace-nowrap flex-1">
+                        {item.to === "/recipes" && isChef
+                          ? "Create Experiment"
+                          : item.label}
+                      </span>
+                      {isActive && <ChevronRight size={13} />}
+                    </>
+                  )}
+                </div>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        {/* Logout at bottom */}
+        {/* <div className="p-4 border-t border-[var(--border)]">
+            <button
+              onClick={() => {
+                setIsMobileOpen(false);
+                onLogout();
+              }}
+              className={`w-full flex items-center gap-3 p-[10px_12px] rounded-[10px] text-[13px] text-red-500 font-bold hover:bg-red-500/10 transition-all ${
+                collapsed ? "justify-center" : ""
+              }`}
+            >
+              <LogOut size={18} />
+              {!collapsed && <span>Logout</span>}
+            </button>
+          </div> */}
+      </aside>
+    </>
   );
 }

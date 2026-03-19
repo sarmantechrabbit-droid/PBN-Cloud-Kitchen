@@ -7,26 +7,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="theme-toggle"
-      style={{
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: '10px',
-        padding: '8px',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '36px',
-        height: '36px'
-      }}
-      onMouseEnter={(e) => {
-        e.target.style.background = 'var(--surface-hover)'
-      }}
-      onMouseLeave={(e) => {
-        e.target.style.background = 'var(--surface)'
-      }}
+      className="theme-toggle flex items-center justify-center w-9 h-9 p-2 rounded-[10px] bg-[var(--surface)] border border-[var(--border)] hover:bg-[var(--surface-hover)] transition-all duration-200 cursor-pointer"
     >
       {isDark ? (
         <Sun size={18} color="var(--muted)" />

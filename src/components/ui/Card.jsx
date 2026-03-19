@@ -1,10 +1,7 @@
-export default function Card({ children, style = {}, className = '', noPad = false }) {
+export default function Card({ children, className = '', noPad = false }) {
   return (
-    <div
-      className={`card ${className}`}
-      style={{ padding: noPad ? 0 : 24, ...style }}
-    >
+    <div className={`bg-[var(--surface)] border border-[var(--border)] rounded-2xl ${noPad ? 'p-0' : 'p-6'} ${className}`}>
       {children}
     </div>
-  )
+  );
 }

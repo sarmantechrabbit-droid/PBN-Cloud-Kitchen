@@ -343,6 +343,7 @@ export const aiAnalysis = [
     recipe: "Gulab Jamun Classic",
     batchNo: "B-2024-001",
     date: "Mar 1, 2024",
+    time: "10:45",
     temp: "180°C",
     timing: "15m",
     expTexture: "Soft",
@@ -367,6 +368,7 @@ export const aiAnalysis = [
     recipe: "Barfi Premium",
     batchNo: "B-2024-002",
     date: "Mar 5, 2024",
+    time: "14:20",
     temp: "165°C",
     timing: "20m",
     expTexture: "Firm",
@@ -391,6 +393,7 @@ export const aiAnalysis = [
     recipe: "Jalebi Crispy",
     batchNo: "B-2024-003",
     date: "Mar 8, 2024",
+    time: "09:12",
     temp: "200°C",
     timing: "8m",
     expTexture: "Crispy",
@@ -416,6 +419,7 @@ export const aiAnalysis = [
     recipe: "Kheer Creamy",
     batchNo: "B-2024-004",
     date: "Mar 10, 2024",
+    time: "16:30",
     temp: "90°C",
     timing: "45m",
     expTexture: "Creamy",
@@ -445,7 +449,7 @@ export const auditLogs = [
     version: "v3.2",
     action: "Completed",
     timestamp: "2024-12-14 09:32",
-    aiStatus: "Pass",
+    aiStatus: "Completed",
     user: "Arjun Mehta",
     details:
       "All parameters within threshold. Texture and yield match predicted values. Hash verified: a1b2c3d4e5f6.",
@@ -469,7 +473,7 @@ export const auditLogs = [
     version: "v5.0",
     action: "Completed",
     timestamp: "2024-12-12 11:05",
-    aiStatus: "Fail",
+    aiStatus: "Cancel ",
     user: "Arjun Mehta",
     details:
       "Critical variance in cooking temperature. Texture inconsistency > 40%. Batch recalled.",
@@ -481,7 +485,7 @@ export const auditLogs = [
     version: "v4.3",
     action: "Completed",
     timestamp: "2024-12-11 16:44",
-    aiStatus: "Pass",
+    aiStatus: "Completed",
     user: "Sunita Rao",
     details:
       "Excellent yield prediction accuracy. Taste score exceeded target. Cleared for production.",
@@ -505,10 +509,10 @@ export const auditLogs = [
     version: "v3.0",
     action: "Completed",
     timestamp: "2024-12-09 13:58",
-    aiStatus: "Pass",
+    aiStatus: "Completed",
     user: "Arjun Mehta",
     details:
-      "All quality parameters passed. Recipe version 3.0 approved for scaling.",
+      "All quality parameters Completeded. Recipe version 3.0 approved for scaling.",
   },
   {
     id: "LOG-007",
@@ -517,7 +521,7 @@ export const auditLogs = [
     version: "v2.5",
     action: "Completed",
     timestamp: "2024-12-08 15:30",
-    aiStatus: "Pass",
+    aiStatus: "Completed",
     user: "Meena Joshi",
     details:
       "Texture and flavor profiles match expected outputs. Approved with commendation.",
@@ -529,10 +533,10 @@ export const auditLogs = [
     version: "v1.2",
     action: "Completed",
     timestamp: "2024-12-07 08:47",
-    aiStatus: "Fail",
+    aiStatus: "Cancel ",
     user: "Arjun Mehta",
     details:
-      "Consistency issues detected. Mushy texture reported. Experiment failed quality threshold.",
+      "Consistency issues detected. Mushy texture reported. Experiment Cancel ed quality threshold.",
   },
   
 ];

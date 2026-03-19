@@ -105,66 +105,67 @@ const ExperimentDetailModal = ({ recipe, onClose, showAiScore = true }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl relative animate-slide-up no-scrollbar">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 sm:p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+      <div className="w-full max-w-3xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl relative animate-slide-up no-scrollbar">
         {/* Header with AI Score */}
-        <div className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-          <div className="flex flex-col">
-            <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">Recipe Details</h2>
-            <p className="text-xs font-semibold text-gray-400">{recipe.recipe}</p>
+        <div className="sticky top-0 z-30 bg-white dark:bg-gray-900 px-4 sm:px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between shadow-sm">
+          <div className="flex flex-col min-w-0 pr-2">
+            <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white tracking-tight truncate">Recipe Details</h2>
+            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 truncate">{recipe.recipe}</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            <div className="text-right flex flex-col items-end">
               {recipe.status === "Completed" && (
-                <div className="text-2xl font-black text-orange-500 leading-none">
-                  {recipe.aiScore}<span className="text-xs text-gray-400 ml-1">/ 100</span>
+                <div className="text-lg sm:text-2xl font-black text-orange-500 leading-none mb-1">
+                  {recipe.aiScore}<span className="text-[10px] text-gray-400 ml-0.5">/100</span>
                 </div>
               )}
               <StatusBadge status={recipe.status} />
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-400 hover:text-gray-900 dark:hover:text-white"
+              className="p-1.5 sm:p-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-100 dark:border-gray-700"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         </div>
 
-        <div className="p-8 space-y-8 text-gray-900 dark:text-white">
+        <div className="p-5 sm:p-8 space-y-6 sm:space-y-8 text-gray-900 dark:text-white">
           {/* Top Section: Info & Image */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+            <div className="space-y-4 sm:space-y-6">
               <div>
-                <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-2 leading-tight">
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
                   {recipe.recipe}
                 </h1>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500">
-                    <span className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-900 dark:text-gray-300">{recipe.id}</span>
-                    <span className="text-gray-300 dark:text-gray-700">|</span>
-                    <span>Batch: {recipe.batchNo}</span>
-                  </div>
+                <div className="flex flex-wrap gap-x-2 gap-y-1.5 items-center">
+                  <span className="text-[10px] sm:text-xs font-bold bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-gray-600 dark:text-gray-400">{recipe.id}</span>
+                  <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                  <span className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest">Batch: {recipe.batchNo}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-orange-50/50 dark:bg-orange-900/10 rounded-2xl border border-orange-100/50 dark:border-orange-900/20">
-                <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-orange-500/20">
+              <div className="flex items-center gap-3 p-3 sm:p-4 bg-orange-500/5 dark:bg-orange-500/10 rounded-2xl border border-orange-500/10 transition-all hover:bg-orange-500/[0.08]">
+                <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-orange-500/20 shrink-0">
                   {recipe.chef.split(' ').map(n => n[0]).join('')}
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-gray-900 dark:text-white">{recipe.chef}</div>
-                  <div className="text-xs font-semibold text-gray-500">{recipe.date}</div>
+                <div className="min-w-0">
+                  <div className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate">{recipe.chef}</div>
+                  <div className="text-[10px] sm:text-xs font-medium text-gray-500 flex items-center gap-1.5">
+                    <Clock size={10} />
+                    {recipe.date}
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="relative group">
+            <div className="relative group hidden md:block">
               <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
               <img
                 src={recipe.image || "https://images.unsplash.com/photo-1604908176997-43149b0a7c0c"}
                 alt={recipe.recipe}
-                className="relative w-full h-40 object-cover rounded-xl shadow-lg border border-white dark:border-gray-800"
+                className="relative w-full h-32 lg:h-40 object-cover rounded-xl shadow-lg border border-white dark:border-gray-800"
               />
             </div>
           </div>
@@ -219,12 +220,12 @@ const ExperimentDetailModal = ({ recipe, onClose, showAiScore = true }) => {
             </div>
 
             <div>
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Sensory Scores</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
+              <h3 className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 sm:mb-6">Sensory Scores</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-6 gap-x-8 sm:gap-x-12">
                 {sensoryLabels.map(({ key, label }) => {
                   const val = reviewData.sensoryScores[key];
                   return (
-                    <div key={key} className="flex justify-between items-center group">
+                    <div key={key} className="flex justify-between items-center group border-b border-gray-50 dark:border-gray-800 sm:border-0 pb-2 sm:pb-0">
                       <span className="text-sm font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{label}</span>
                       <span className="text-sm font-black text-orange-500 whitespace-nowrap">{val ? `${val}/10` : "—"}</span>
                     </div>
@@ -308,55 +309,56 @@ const VersionListModal = ({
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
       <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl relative animate-slide-up no-scrollbar">
         {/* Header */}
-        <div className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-          <div className="flex flex-col">
-            <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">Recipe History</h2>
-            <p className="text-xs font-semibold text-gray-400">{baseName}</p>
+        <div className="sticky top-0 z-30 bg-white dark:bg-gray-900 px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between shadow-sm">
+          <div className="flex flex-col min-w-0 pr-4">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">Recipe History</h2>
+            <p className="text-[10px] sm:text-xs font-medium text-gray-400 truncate uppercase tracking-wider">{baseName}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="p-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-100 dark:border-gray-700"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <div className="p-6">
-          <div className="space-y-3">
+        <div className="p-4 sm:p-6">
+          <div className="space-y-4">
             {versions.map((ver) => (
               <div
                 key={ver.id}
-                className="group flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-2xl transition-all hover:bg-white dark:hover:bg-gray-800 hover:shadow-lg hover:shadow-orange-500/5 hover:border-orange-200 dark:hover:border-orange-900/40"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 bg-gray-50 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-800 rounded-2xl transition-all hover:bg-white dark:hover:bg-gray-800 hover:shadow-xl hover:shadow-orange-500/5 hover:border-orange-500/30 gap-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center border border-gray-100 dark:border-gray-800 text-orange-500 font-bold shadow-sm">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center border border-gray-100 dark:border-gray-800 text-orange-500 text-xs sm:text-sm font-bold shadow-sm group-hover:bg-orange-500 group-hover:text-white transition-all">
                     {ver.version}
                   </div>
-                  <div>
-                    <div className="text-sm font-black text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors">
+                  <div className="min-w-0">
+                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors truncate">
                       {ver.recipe}
                     </div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 flex items-center gap-2">
-                      <span>Chef: {ver.chef} • {ver.date}</span>
-                      <StatusBadge status={ver.status} />
+                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mt-1.5 flex flex-wrap items-center gap-2">
+                       <span className="flex items-center gap-1.5"><Clock size={10} /> {ver.date}</span>
+                       <span className="text-gray-200 dark:text-gray-700">|</span>
+                       <StatusBadge status={ver.status} />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-8 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-100 dark:border-gray-800/50">
                   {ver.status === "Completed" && (
-                    <div className="text-right">
-                      <div className="text-lg font-black text-orange-500 leading-none mb-1">
+                    <div className="text-left sm:text-right">
+                      <div className="text-base sm:text-lg font-bold text-orange-500 leading-none mb-1">
                         {ver.aiScore}%
                       </div>
-                      <div className="text-[10px] font-bold text-gray-400">AI SCORE</div>
+                      <div className="text-[9px] font-bold text-gray-400 tracking-tighter">AI SCORE</div>
                     </div>
                   )}
                   
                   <button
                     onClick={() => onSelect(ver)}
                     disabled={!canSelect}
-                    className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 dark:disabled:bg-gray-800 text-white text-xs font-black rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5"
+                    className="flex-1 sm:flex-none px-6 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 dark:disabled:bg-gray-800 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-lg shadow-orange-500/20 transition-all active:scale-95"
                   >
                     VIEW
                   </button>
@@ -454,10 +456,7 @@ export default function AllRecipesPage() {
   );
 
   return (
-    <div
-      className="animate-fade-in p-4 lg:p-8 min-h-screen transition-colors duration-300"
-      style={{ background: "var(--app-bg)" }}
-    >
+    <div className="animate-fade-in p-4 lg:p-8 min-h-screen transition-colors duration-300 bg-[var(--app-bg)]">
       <PageHeader
         title="All Recipes"
         subtitle="Explore and manage the complete collection of cloud kitchen recipes and experiments."
@@ -468,46 +467,17 @@ export default function AllRecipesPage() {
         <div className="flex flex-col md:flex-row gap-4 flex-1">
           <div className="relative flex-1 max-w-md">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
               size={18}
-              style={{ color: "var(--muted)" }}
             />
             <input
               type="text"
               placeholder="Search recipes or chefs..."
-              style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-                color: "var(--text)",
-              }}
-              className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-sm shadow-sm"
+              className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-sm shadow-sm font-sans"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          {/* <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
-            {["All", "Completed", "Pending"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border shadow-sm ${
-                  filterStatus === status
-                    ? "bg-orange-500 text-white border-orange-500 shadow-orange-500/20"
-                    : "hover:bg-[var(--surface-hover)]"
-                }`}
-                style={{
-                  background:
-                    filterStatus === status ? "#F97316" : "var(--surface)",
-                  color: filterStatus === status ? "#fff" : "var(--muted)",
-                  borderColor:
-                    filterStatus === status ? "#F97316" : "var(--border)",
-                }}
-              >
-                {status}
-              </button>
-            ))}
-          </div> */}
         </div>
 
         {/* View Toggle Buttons */}
@@ -533,27 +503,17 @@ export default function AllRecipesPage() {
           {pageItems.map((item) => (
             <div
               key={item.baseName}
-              style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-              }}
-              className="group border rounded-2xl overflow-hidden hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 flex flex-col shadow-sm"
+              className="group bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 flex flex-col shadow-sm"
             >
               {/* Minimalist Card Header */}
               <div className="p-5 flex-1">
                 <div className="flex items-center justify-end mb-4">
-                  <span
-                    className="text-[10px] font-mono tracking-tighter"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <span className="text-[10px] font-mono tracking-tighter text-[var(--muted)]">
                     {item.latest.id}
                   </span>
                 </div>
 
-                <h3
-                  className="text-lg font-bold mb-2 truncate group-hover:text-orange-500 transition-colors"
-                  style={{ color: "var(--text)" }}
-                >
+                <h3 className="text-lg font-bold mb-2 truncate group-hover:text-orange-500 transition-colors text-[var(--text)]">
                   {item.baseName}
                 </h3>
 
@@ -564,34 +524,22 @@ export default function AllRecipesPage() {
                       .map((n) => n[0])
                       .join("")}
                   </div>
-                  <span
-                    className="text-xs font-medium"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <span className="text-xs font-medium text-[var(--muted)]">
                     {item.latest.chef}
                   </span>
                 </div>
 
-                <div
-                  className="grid grid-cols-2 gap-3 pb-4 border-b"
-                  style={{ borderColor: "var(--border)" }}
-                >
+                <div className="grid grid-cols-2 gap-3 pb-4 border-b border-[var(--border)]">
                   <div className="flex items-center gap-2">
-                    <Clock size={14} style={{ color: "var(--muted)" }} />
-                    <span
-                      className="text-xs font-semibold"
-                      style={{ color: "var(--subtle)" }}
-                    >
+                    <Clock size={14} className="text-[var(--muted)]" />
+                    <span className="text-xs font-semibold text-[var(--subtle)]">
                       {item.latest.timing}m
                     </span>
                   </div>
                   {item.latest.status === "Completed" && (
                     <div className="flex items-center gap-2">
-                      <Star size={14} style={{ color: "var(--muted)" }} />
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: "var(--subtle)" }}
-                      >
+                      <Star size={14} className="text-[var(--muted)]" />
+                      <span className="text-xs font-semibold text-[var(--subtle)]">
                         {item.latest.aiScore}%
                       </span>
                     </div>
@@ -600,24 +548,12 @@ export default function AllRecipesPage() {
               </div>
 
               {/* Card Footer */}
-              <div
-                className="px-5 py-4 flex items-center justify-between border-t"
-                style={{
-                  background: "var(--bg)",
-                  borderColor: "var(--border)",
-                }}
-              >
+              <div className="px-5 py-4 flex items-center justify-between border-t bg-[var(--bg)] border-[var(--border)]">
                 <div className="flex flex-col">
-                  <span
-                    className="text-[10px] uppercase tracking-widest font-bold"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--muted)]">
                     Created On
                   </span>
-                  <span
-                    className="text-xs font-semibold"
-                    style={{ color: "var(--text)" }}
-                  >
+                  <span className="text-xs font-semibold text-[var(--text)]">
                     {item.latest.date}
                   </span>
                 </div>
@@ -629,12 +565,7 @@ export default function AllRecipesPage() {
                       versions,
                     });
                   }}
-                  className="p-2 border hover:bg-orange-500 hover:text-white rounded-lg transition-all duration-300 shadow-sm"
-                  style={{
-                    background: "var(--surface)",
-                    borderColor: "var(--border)",
-                    color: "var(--muted)",
-                  }}
+                  className="p-2 border bg-[var(--surface)] border-[var(--border)] text-[var(--muted)] hover:bg-orange-500 hover:text-white rounded-lg transition-all duration-300 shadow-sm"
                 >
                   <ArrowRight size={16} />
                 </button>
@@ -646,10 +577,7 @@ export default function AllRecipesPage() {
 
       {/* Table View */}
       {viewMode === "table" && (
-        <div
-          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-          className="border rounded-2xl overflow-hidden shadow-sm"
-        >
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
@@ -673,7 +601,7 @@ export default function AllRecipesPage() {
                     <td className="table-cell-primary table-cell-mono">
                       {item.latest.id}
                     </td>
-                    <td style={{ fontWeight: 600 }}>{item.baseName}</td>
+                    <td className="font-semibold">{item.baseName}</td>
                     <td>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center text-[10px] font-bold text-orange-500">
@@ -705,12 +633,7 @@ export default function AllRecipesPage() {
                             versions,
                           });
                         }}
-                        className="p-1.5 border hover:bg-orange-500 hover:text-white rounded-lg transition-all duration-300"
-                        style={{
-                          background: "var(--bg)",
-                          borderColor: "var(--border)",
-                          color: "var(--muted)",
-                        }}
+                        className="p-1.5 border bg-[var(--bg)] border-[var(--border)] text-[var(--muted)] hover:bg-orange-500 hover:text-white rounded-lg transition-all duration-300"
                       >
                         <ArrowRight size={14} />
                       </button>
@@ -754,25 +677,14 @@ export default function AllRecipesPage() {
 
       {filteredRecipes.length === 0 && (
         <div className="py-20 flex flex-col items-center justify-center text-center">
-          <div
-            className="w-16 h-16 border rounded-full flex items-center justify-center mb-4 shadow-sm"
-            style={{
-              background: "var(--surface)",
-              borderColor: "var(--border)",
-              color: "var(--muted)",
-            }}
-          >
+          <div className="w-16 h-16 border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] rounded-full flex items-center justify-center mb-4 shadow-sm">
             <ChefHat size={32} />
           </div>
-          <h3 className="text-lg font-bold" style={{ color: "var(--text)" }}>
+          <h3 className="text-lg font-bold text-[var(--text)]">
             No recipes found
           </h3>
-          <p
-            className="max-w-xs mt-2 text-sm italic"
-            style={{ color: "var(--muted)" }}
-          >
-            Try adjusting your search or filters to find what you're looking
-            for.
+          <p className="max-w-xs mt-2 text-sm italic text-[var(--muted)]">
+            Try adjusting your search or filters to find what you're looking for.
           </p>
         </div>
       )}
@@ -781,22 +693,17 @@ export default function AllRecipesPage() {
         <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="btn-ghost"
-            style={{ padding: "6px 12px", opacity: page === 1 ? 0.6 : 1 }}
+            className={`btn-ghost px-3 py-1.5 ${page === 1 ? "opacity-60" : "opacity-100"}`}
             disabled={page === 1}
           >
             Prev
           </button>
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
+          <span className="text-xs text-[var(--muted)]">
             Page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="btn-ghost"
-            style={{
-              padding: "6px 12px",
-              opacity: page === totalPages ? 0.6 : 1,
-            }}
+            className={`btn-ghost px-3 py-1.5 ${page === totalPages ? "opacity-60" : "opacity-100"}`}
             disabled={page === totalPages}
           >
             Next
